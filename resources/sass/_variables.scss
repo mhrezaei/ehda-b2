@@ -1,0 +1,32 @@
+/* directories */
+$assetsDir: "../";
+$imagesDir: "#{$assetsDir}images/template/";
+$fontsDir: "#{$assetsDir}fonts/";
+
+/* directions */
+$verticalDirections: ("t": "top", "b": "bottom");
+$horizontalDirections: ("r": "right", "l": "left");
+$directions: map_merge($verticalDirections, $horizontalDirections);
+
+/* colors */
+$darkColors: (
+        "black": #3e3e3e,
+        "almostBlack": #070707,
+        "green": #8bba12,
+        "red": #e80000,
+        "purple": #9013FE,
+        "teal": #23999d,
+        "blue": #337ab7,
+        "brown": #4F3111,
+        "violet": #4F5B93,
+        "orange": #F18432,
+        "pink": #A400AC,
+        "orangeRed": #A400AC,
+);
+
+$lightColors: (
+        white: #ffffff,
+        gray: #808080,
+);
+
+$colors: map_merge($darkColors, $lightColors);

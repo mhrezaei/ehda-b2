@@ -474,6 +474,12 @@ return [
 
         'seat'       => 'سمت',
         'short_view' => 'نمایش مختصر',
+
+        'period_time'         => 'مدت زمان دوره', // TODO: new
+        'decreasing'          => 'کم‌شونده', // TODO: new
+        'increasing'          => 'زیاد‌شونده', // TODO: new
+        'losed_color_code'    => 'کد رنگ قسمت از دست رفته', // TODO: new
+        'remained_color_code' => 'کد رنگ قسمت باقی مانده', // TODO: new
     ],
 
     "http" => [

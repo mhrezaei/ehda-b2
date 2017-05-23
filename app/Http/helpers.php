@@ -420,3 +420,23 @@ function hashid_decrypt($hash, $connection = 'main')
 {
     return Hashids::connection($connection)->decode($hash);
 }
+
+/**
+ * checks if $code is a valid color code
+ * @param $code
+ * @return bool
+ */
+function validateColorCode($code)
+{
+    if (is_string($code)) {
+        if (!starts_with($code, '#')) {
+            $code = '#' . $code;
+        }
+
+
+        if (preg_match('/^#[a-fA-F0-9]{6}$/i', $code)) {
+            return $code;
+        }
+    }
+    return false;
+}
