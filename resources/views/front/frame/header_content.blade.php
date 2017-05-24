@@ -20,7 +20,10 @@
     <div class="main-menu clearfix">
         <a href="/" class="col-xs-4 col-sm-4 col-md-3">
             <h1 class="main-logo">
-                <img src="{{ url('assets') }}/images/template/header-logo.png" alt="انجمن اهدای عضو ایرانیان" id="logo">
+                {{ null, $logo = setting()->ask('site_logo')->gain() }}
+                @if($logo)
+                    <img src="{{ url($logo) }}" alt="انجمن اهدای عضو ایرانیان" id="logo">
+                @endif
                 <span class="hidden">انجمن اهدای عضو ایرانیان</span>
             </h1>
         </a>

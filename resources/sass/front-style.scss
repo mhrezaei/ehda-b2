@@ -1552,7 +1552,21 @@ body.rtl {
   }
 }
 
+%border-solid {
+  border-style: solid;
+}
+
+@for $size from 1 to 6 {
+  .border-#{$size} {
+    @extend %border-solid;
+    border-width: #{$size}px;
+  }
+}
+
 @each $directionShort, $directionLong in $directions {
+  %border-#{$directionLong}-solid {
+    border-#{$directionLong}-style: solid;
+  }
   @for $i from 1 to 10 {
     $value: $i * 5;
     .m#{$directionShort}#{$value} {
@@ -1560,6 +1574,13 @@ body.rtl {
     }
     .p#{$directionShort}#{$value} {
       padding-#{$directionLong}: #{$value}px;
+    }
+  }
+
+  @for $size from 1 to 6 {
+    .border-#{$directionLong}-#{$size} {
+      @extend %border-#{$directionLong}-solid;
+      border-#{$directionLong}-width: #{$size}px;
     }
   }
 }
@@ -1612,5 +1633,30 @@ body.rtl {
     border-bottom-width: #{$borderSize};
     border-bottom-style: solid;
     margin-bottom: -#{$borderSize};
+  }
+}
+
+/* floating elements */
+%floating {
+  position: absolute;
+}
+
+@each $vdShort, $vdLong in $verticalDirections {
+  @for $i from 1 to 11 {
+    $value: $i * 5;
+    .floating-#{$vdLong}-#{$value} {
+      @extend %floating;
+      #{$vdLong}: #{$value}px;
+    }
+  }
+}
+
+@each $hdShort, $hdLong in $horizontalDirections {
+  @for $i from 1 to 11 {
+    $value: $i * 5;
+    .floating-#{$hdLong}-#{$value} {
+      @extend %floating;
+      #{$hdLong}: #{$value}px;
+    }
   }
 }

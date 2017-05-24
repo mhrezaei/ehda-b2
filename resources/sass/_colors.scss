@@ -11,6 +11,7 @@ $firsLightColor: nth($lightColors, 1);
   .border-#{$colorName} {
     border-color: $colorCode;
   }
+  .link-#{$colorName},
   .link-#{$colorName}:link,
   .link-#{$colorName}:focus,
   .link-#{$colorName}:visited {

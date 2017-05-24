@@ -1,6 +1,7 @@
 <div class="container">
     <div class="row mt15 mb20">
         <div class="col-xs-12 col-md-4">
+            <a href="#" class="floating-top-20 floating-left-15 link-red">بیشتر</a>
             <h3 class="underlined-heading">
                 <span class="text-red border-bottom-red">اخبار داغ</span>
             </h3>
@@ -39,6 +40,7 @@
             </div>
         </div>
         <div class="col-xs-12 col-md-4">
+            <a href="#" class="floating-top-20 floating-left-15 link-green">بیشتر</a>
             <h3 class="underlined-heading">
                 <span class="text-green border-bottom-green">رویدادها</span>
             </h3>
@@ -62,6 +64,7 @@
             </div>
         </div>
         <div class="col-xs-12 col-md-4">
+            <a href="#" class="floating-top-20 floating-left-15 link-blue">بیشتر</a>
             <h3 class="underlined-heading">
                 <span class="text-blue border-bottom-blue">اخبار اهدا</span>
             </h3>
