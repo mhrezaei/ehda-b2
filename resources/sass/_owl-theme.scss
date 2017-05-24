@@ -101,18 +101,18 @@
 
 /* modification */
 
-.owl-theme .owl-controls .owl-buttons div{
-  @media(max-width:650px){
+.owl-theme .owl-controls .owl-buttons div {
+  @media(max-width: 650px) {
     background-size: 40px;
     width: 0;
-    &.owl-next{
+    &.owl-next {
       background-position-x: -20px;
     }
   }
 }
 
-.owl-theme .slide-text{
-  background-color: rgba(77,139,25,0.5);
+.owl-theme .slide-text {
+  background-color: rgba(77, 139, 25, 0.5);
   position: absolute;
   bottom: 50px;
   color: #fff;
@@ -121,16 +121,21 @@
   border-radius: 10px;
   left: 50%;
   transform: translateX(-50%);
-  *{
+  * {
     display: block;
     margin: 10px 0;
     white-space: nowrap;
   }
-  @media(max-width:800px){
-    h3{
+  .slide-text-description {
+    display: inline-block;
+    width: 100%;
+    white-space: normal;
+  }
+  @media(max-width: 800px) {
+    h3 {
       font-size: 1.2em;
     }
-    span{
+    span {
       font-size: 1em;
     }
   }
