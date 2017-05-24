@@ -8,7 +8,8 @@
 
 @include('front.frame.header')
 
-<body>
+{{ null, $background = setting()->ask('login_page_background')->in(getLocale())->gain() }}
+<body @if($background) style="background-image: url('{{ url($background) }}')" @endif>
 <div class="login-form bg-lightGray">
     {{ null, $logo = setting()->ask('site_logo_small')->gain() }}
     @if($logo)
