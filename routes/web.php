@@ -229,7 +229,11 @@ Route::group(['namespace' => 'Auth', 'prefix' => '{lang}', 'middleware' => ['Det
 
 Route::group(['namespace' => 'Front', 'middleware' => ['DetectLanguage', 'Setting']], function () {
     Route::get('/', 'FrontController@index');
-    Route::get('/test/states', 'TestController@states');
+
+    Route::group(['prefix' => 'test'], function () {
+        Route::get('states', 'TestController@states');
+        Route::get('gallery/archive', 'TestController@gallery_archive');
+    });
     Route::post('/register/new', 'FrontController@register');
 
 });

@@ -118,4 +118,9 @@ class TestController extends Controller
 
         return view('front.iranmap.main', compact('states'));
     }
+
+    public function gallery_archive()
+    {
+        return view('front.gallery.archive.main');
+    }
 }

@@ -6,11 +6,7 @@
 @endsection
 
 @section('content')
-    <style>
-        .ehda-card {
-            display: none
-        }
-    </style>
+    <style> .ehda-card { display: none; }</style>
     <div class="container-fluid">
         <div class="page-green-title col-xs-12">
             <h3 class="container">ورود استان&zwnj;ها</h3>
@@ -258,6 +254,5 @@
             });
         })
     </script>
-    {!! Html::script('assets/js/iranmap.min.js') !!}
 @endsection
 

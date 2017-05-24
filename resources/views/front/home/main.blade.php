@@ -14,5 +14,4 @@
         @include('front.home.equation')
         @include('front.home.hot-links')
     </div>
-    {!! Html::script ('assets/js/main.min.js') !!}
 @endsection

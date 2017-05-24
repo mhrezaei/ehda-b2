@@ -62,6 +62,7 @@ return [
     'from'                                     => 'از',
     'to'                                       => 'تا',
     'states'                                   => 'استان‌ها', // TODO: new
+    'gallery'                                  => 'گالری', // TODO: new
     'profile_messages'                         => [
         'not_enough_information'   => 'اطلاعات پروفایل شما کافی نیست.',
         'complete_to_join_drawing' => 'اکنون کافی‌ست با تکمیل اطلاعات خود وارد فهرست قرعه‌کشی شود.',
