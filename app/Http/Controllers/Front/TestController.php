@@ -123,4 +123,9 @@ class TestController extends Controller
     {
         return view('front.gallery.archive.main');
     }
+
+    public function gallery_single()
+    {
+        return view('front.gallery.single.main');
+    }
 }
