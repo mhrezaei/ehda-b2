@@ -199,7 +199,7 @@ header {
           right: 0;
           top: 0;
           bottom: 0;
-          background: url(#{$imagesDir}menu-ribbon.png) no-repeat left 117px;
+          background: url(#{$imagesDir}menu-ribbon.png) no-repeat left 122px;
           background-attachment: fixed;
           position: absolute;
           pointer-events: none;
@@ -222,14 +222,15 @@ header {
             top: -29px;
             transform: skew(-45deg);
             bottom: 0;
-            z-index: -1;
+            background: #000;
+            opacity: 0.1;
           }
         }
-        &.active > a {
-          &:before {
-            background: #e6e6e6;
-          }
-        }
+        //&.active > a {
+        //  &:before {
+        //    background: #e6e6e6;
+        //  }
+        //}
         &:hover > a, > a:hover {
           &:before {
             border-top: 10px solid #e6e6e6;
