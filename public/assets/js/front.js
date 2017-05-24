@@ -343,6 +343,18 @@ function loadingDialog(parameter, dialog) {
     }
 }
 
+function openUrl(url, target) {
+    if(!isDefined(target)){
+        target = '_blank';
+    }
+    var win = window.open(url, target);
+    if (win) {
+        win.focus();
+    } else {
+        alert('Please allow popups for this website');
+    }
+}
+
 $(document).ready(function () {
 
     /**

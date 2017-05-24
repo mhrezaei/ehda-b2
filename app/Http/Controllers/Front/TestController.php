@@ -44,8 +44,78 @@ class TestController extends Controller
         return ":)";
     }
 
-    public function emitis()
+    public function states()
     {
+        $states = [
+            'alborz',
+            'ardabil',
+            'azerbaijan-east',
+            'azerbaijan-west',
+            'bushehr',
+            'chahar-mahaal-bakhtiari',
+            'fars',
+            'gilan',
+            'golestan',
+            'hamedan',
+            'hormozgan',
+            'ilam',
+            'isfahan',
+            'kerman',
+            'kermanshah',
+            'khorasan-north',
+            'khorasan-razavi',
+            'khorasan-south',
+            'khuzestan',
+            'kohgiluyeh-boyer-ahmad',
+            'kurdistan',
+            'lorestan',
+            'markazi',
+            'mazandaran',
+            'qazvin',
+            'qom',
+            'semnan',
+            'sistan-baluchestan',
+            'tehran',
+            'yazd',
+            'zanjan',
+        ];
+        $enabledStates = [
+            'alborz',
+            'ardabil',
+            'azerbaijan-east',
+            'azerbaijan-west',
+            'bushehr',
+            'chahar-mahaal-bakhtiari',
+            'fars',
+            'gilan',
+            'golestan',
+            'hamedan',
+            'ilam',
+            'isfahan',
+            'kerman',
+            'kermanshah',
+            'khorasan-north',
+            'khorasan-razavi',
+            'khorasan-south',
+            'khuzestan',
+            'kohgiluyeh-boyer-ahmad',
+            'lorestan',
+            'markazi',
+            'mazandaran',
+            'semnan',
+            'sistan-baluchestan',
+            'tehran',
+            'yazd',
+            'zanjan',
+        ];
+        foreach ($states as $key => $state) {
+            $states[$key] = [
+                'name'   => $state,
+                'active' => (in_array($state, $enabledStates)) ? true : false,
+                'link'   => 'https://' . $state . '.ehda.center',
+            ];
+        }
 
+        return view('front.iranmap.main', compact('states'));
     }
 }
