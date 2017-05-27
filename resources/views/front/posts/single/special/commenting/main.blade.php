@@ -1,12 +1,12 @@
 {{ null , $post->spreadMeta() }}
-<section class="panel">
-    <header>
-        <div class="title">
-            <span class="icon-comment"> </span>
-            {{ $post->title_shown_on_sending_comments }}
+<div class="col-xs-12">
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>
+                <span class="icon-comment"> </span>
+                {{ $post->title_shown_on_sending_comments }}
+            </h4>
         </div>
-    </header>
-    <article>
         <div class="col-xs-12 pb15">
             {!! $post->text  !!}
         </div>
@@ -14,5 +14,5 @@
         @if($post->show_previous_comments)
             @include($viewFolder . '.previous-comments')
         @endif
-    </article>
-</section>
+    </div>
+</div>

@@ -164,6 +164,7 @@ class PostsServiceProvider extends ServiceProvider
         // normalize data
         $data = array_normalize($data, [
             'lang'      => getLocale(),
+            'externalBlade' => '',
             'preview'   => false,
             'showError' => true,
         ]);
@@ -188,8 +189,8 @@ class PostsServiceProvider extends ServiceProvider
         }
 
         // render view
-
-        return view($viewFolder . '.main', compact('post', 'viewFolder'));
+        $externalBlade = $data['externalBlade'];
+        return view($viewFolder . '.main', compact('post', 'viewFolder', 'externalBlade'));
     }
 
     public static function showError($errorMessage, $ajaxRequest = false)

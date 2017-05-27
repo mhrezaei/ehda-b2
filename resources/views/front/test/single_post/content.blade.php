@@ -24,6 +24,8 @@
     </p>
 </div>
 
+{!! $externalBlade or '' !!}
+
 {{-- best command for real post --}}
 {{--<small>{{ trans('validation.attributes.publish_date') }}: {{ $post->say('published_at') }}</small>--}}
 <small>{{ trans('validation.attributes.publish_date') }}: {{ echoDate(\Carbon\Carbon::now()) }}</small>

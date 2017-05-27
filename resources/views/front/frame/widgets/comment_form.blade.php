@@ -13,6 +13,21 @@
             'value' => $post->id,
         ])
 
+        @include('forms.input', [
+            'name' => 'name',
+            'label' => false,
+            'placeholder' => trans('validation.attributes.first_and_last_name'),
+            'class' => 'form-required',
+        ])
+
+
+        @include('forms.input', [
+            'name' => 'email',
+            'label' => false,
+            'placeholder' => trans('validation.attributes.email'),
+            'class' => 'form-required',
+        ])
+
         @include('forms.textarea', [
             'name' => 'text',
             'label' => false,
@@ -24,7 +39,7 @@
         <div class="col-xs-12">
             <div class="form-group pt15">
                 <div class="action tal">
-                    <button class="blue"> ثبت نظر</button>
+                    <button class="btn btn-primary pull-left"> ثبت نظر</button>
                 </div>
             </div>
         </div>

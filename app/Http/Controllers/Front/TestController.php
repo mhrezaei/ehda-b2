@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Receipt;
 use App\Models\Test\Meta;
 use App\Models\User;
+use App\Providers\PostsServiceProvider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -147,5 +148,11 @@ class TestController extends Controller
     {
         $twoColumns = false;
         return view('front.test.archive_post.main', compact('twoColumns'));
+    }
+
+    public function about()
+    {
+        $contactFormHTML = PostsServiceProvider::showPost('contact-us-form', ['showError' => false]);
+        return view('front.test.about.main', compact('contactFormHTML'));
     }
 }
