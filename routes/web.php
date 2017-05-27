@@ -234,6 +234,7 @@ Route::group(['namespace' => 'Front', 'middleware' => ['DetectLanguage', 'Settin
         Route::get('states', 'TestController@states');
         Route::get('gallery/archive', 'TestController@gallery_archive');
         Route::get('gallery/single', 'TestController@gallery_single');
+        Route::get('post/single', 'TestController@post_single');
     });
     Route::post('/register/new', 'FrontController@register');
 

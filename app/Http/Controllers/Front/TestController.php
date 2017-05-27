@@ -128,4 +128,18 @@ class TestController extends Controller
     {
         return view('front.gallery.single.main');
     }
+
+    public function post_single()
+    {
+        $showSideBar = true;
+        $sideBarItems = [
+            ['label' => 'عنوان تستی عنوان تستی', 'link' => '#'],
+            ['label' => 'عنوان خبر عنوان تستی', 'link' => '#'],
+            ['label' => 'تستی خبر عنوان تستی', 'link' => '#'],
+            ['label' => 'عنوان تستی خبر عنوان تستی', 'link' => '#'],
+            ['label' => 'عنوان تستی خبر عنوان تستی', 'link' => '#'],
+            ['label' => 'عنوان تستی خبر عنوان تستی', 'link' => '#'],
+        ];
+        return view('front.test.single_post.main', compact('showSideBar', 'sideBarItems'));
+    }
 }
