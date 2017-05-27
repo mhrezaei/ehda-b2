@@ -142,4 +142,10 @@ class TestController extends Controller
         ];
         return view('front.test.single_post.main', compact('showSideBar', 'sideBarItems'));
     }
+
+    public function post_archive()
+    {
+        $twoColumns = false;
+        return view('front.test.archive_post.main', compact('twoColumns'));
+    }
 }

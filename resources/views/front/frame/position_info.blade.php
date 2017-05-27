@@ -1,6 +1,10 @@
+@if(!isset($color) or !$color)
+    {{ null, $color = 'black' }}
+@endif
+
 <div class="row">
     @if(isset($group) and $group)
-        <div class="page-green-title col-xs-12">
+        <div class="page-{{ $color }}-title col-xs-12">
             <h3 class="container">{{ $group }}</h3>
         </div>
     @endif

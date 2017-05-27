@@ -965,7 +965,7 @@ body.contact .content {
 @import "featherlight";
 @import "featherlight.gallery";
 
-.page-green-title {
+%page-title {
   color: #fff;
   line-height: 64px;
   white-space: nowrap;
@@ -980,7 +980,7 @@ body.contact .content {
     }
     &:after {
       content: "";
-      background-color: #5d962a;
+      //background-color: #5d962a;
       transform: skew(45deg);
       position: absolute;
       right: 0;
@@ -993,13 +993,14 @@ body.contact .content {
       top: 0;
     }
   }
+
   h3 {
     margin-top: 10px;
     margin-bottom: 15px;
   }
   &:before {
     content: "";
-    background-color: #5d962a;
+    //background-color: #5d962a;
     transform: skew(-45deg);
     position: absolute;
     right: -100px;
@@ -1007,6 +1008,15 @@ body.contact .content {
     min-width: 300px;
     height: 100%;
     z-index: -1;
+  }
+}
+
+@each $colorName, $colorCode in $darkColors {
+  .page-#{$colorName}-title {
+    @extend %page-title;
+    &:after, &:before {
+      background-color: #{$colorCode};
+    }
   }
 }
 
