@@ -12,8 +12,14 @@
     </style>
     <div class="container-fluid">
         @include('front.frame.position_info', [
-            'color' => 'green',
             'group' => 'بایگانی خبرها',
+            'groupColor' => 'green',
+            'category' => 'دسته بندی',
+            'categoryColor' => 'red',
+            'title' => 'عنوان',
+            'titleColor' => 'blue',
+            'description' => ' توضیحات توضیحات توضیحات توضیحات توضیحات توضیحات توضیحات توضیحات',
+            'descriptionColor' => 'orange',
         ])
         <div class="container">
             <div class="row archive">
