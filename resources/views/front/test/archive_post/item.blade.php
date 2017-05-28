@@ -1,7 +1,7 @@
 <div class="media @if($twoColumns) col-xs-6 @else col-xs-12 @endif">
     <a class="link-black" href="#">
-        <div class="media-right">
-            <img class="media-right" src="{{ url('photos/shares/login-background.jpg') }}">
+        <div class="media-start">
+            <img src="{{ url('photos/shares/login-background.jpg') }}">
         </div>
         <div class="media-body">
             <h4 class="media-heading">آمار بالای نارسایی کلیه در کشور</h4>

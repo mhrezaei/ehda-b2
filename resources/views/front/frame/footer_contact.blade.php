@@ -23,10 +23,44 @@
         @endif
     </ul>
     <p class="address">
-        ملاصدرا، شیراز شمالی، خیابان حكیم اعظم، پلاك ۳۰، دانشگاه خاتم، طبقه ۲ انجمن اهدای عضو
-        ایرانیان<br>(مشاهده
-        برروی نقشه)<br>
-        ۸۹۱۷۴۱۳۵ ۲۱ ۹۸ +<br>
-        <a href="">info@ehda.center</a>
-    </p>
+    {{ null, $address = setting()->ask('address')->in(getLocale())->gain() }}
+    @if($address)
+        <h5>{{ trans('validation.attributes.address') }}:</h5>
+        {{ $address }}
+    @endif
+    <br>
+    {{ null, $location = setting()->ask('location')->gain() }}
+    @if($location and is_array($location) and (count($location) == 2))
+        <a href="{{ url('about#map') }}" class="link-white">{{ trans('front.view_on_map') }}</a>
+        <br>
+    @endif
+    {{ null, $tels = setting()->ask('telephone')->gain() }}
+    @if($tels)
+        @if(!is_array($tels))
+            {{ null, $tels = [$tels ] }}
+        @endif
+        @foreach($tels as $key => $tel)
+            @if($key)
+                ،
+            @endif
+            <a href="tel:{{ $tel }}">
+                {{ ad($tel) }}
+            </a>
+        @endforeach
+    @endif
+    <br> {{ null, $emails = setting()->ask('email')->gain() }}
+    @if($emails)
+        @if(!is_array($emails))
+            {{ null, $emails = [$emails ] }}
+        @endif
+        @foreach($emails as $key => $email)
+            @if($key)
+                <br/>
+            @endif
+            <a href="mailto:{{ $email }}">
+                {{ $email }}
+            </a>
+            @endforeach
+            @endif
+            </p>
 </div>

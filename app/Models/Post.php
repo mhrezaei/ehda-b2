@@ -934,7 +934,10 @@ class Post extends Model
 	public function canRecieveComments()
 	{
 		$this->spreadMeta();
-		if((user()->exists or $this->allow_anonymous_comment) and
+	    $commentSetting = setting()->ask('receiving_comments')->gain();
+
+		if((($commentSetting === null) or $commentSetting) and
+		    (user()->exists or $this->allow_anonymous_comment) and
 			(!$this->disable_receiving_comments)
 		) {
 			return true;

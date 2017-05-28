@@ -81,13 +81,22 @@ function ed($string)
  */
 function ad($string)
 {
-    $specialLangs = ['fa', 'ar'];
 
-    if (in_array(getLocale(), $specialLangs)) {
+    if (isLangRtl()) {
         return pd($string);
     }
 
     return ed($string);
+}
+
+function isLangRtl()
+{
+    $rtlLangs = ['fa', 'ar'];
+
+    if (in_array(getLocale(), $rtlLangs)) {
+        return true;
+    }
+    return false;
 }
 
 

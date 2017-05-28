@@ -9,19 +9,19 @@
     <p></p>
     <p>
     </p>
-    {{ null, $tells = setting()->ask('tellephone')->gain() }}
-    @if($tells)
-        @if(!is_array($tells))
-            {{ null, $tells = [$tells ] }}
+    {{ null, $tels = setting()->ask('telephone')->gain() }}
+    @if($tels)
+        @if(!is_array($tels))
+            {{ null, $tels = [$tels ] }}
         @endif
         <h5>
             {{ trans('validation.attributes.tel') }}:
-            @foreach($tells as $key => $tell)
+            @foreach($tels as $key => $tel)
                 @if($key)
                     ,
                 @endif
-                <a href="tel:{{ $tell }}">
-                    {{ ad($tell) }}
+                <a href="tel:{{ $tel }}">
+                    {{ ad($tel) }}
                 </a>
             @endforeach
         </h5>
@@ -38,7 +38,7 @@
                     ,
                 @endif
                 <a href="mailto:{{ $email }}">
-                    {{ ad($email) }}
+                    {{ $email }}
                 </a>
             @endforeach
         </h5>

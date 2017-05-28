@@ -2,7 +2,6 @@
 @import "variables";
 /* libraries */
 @import "bootstrap";
-@import "bootstrap-rtl";
 @import "font-awesome/font-awesome";
 @import "owl-carousel";
 @import "owl-card-theme";
@@ -14,7 +13,7 @@
 /* other files */
 @import "sprites";
 
-$localeDirections: ("start": "right", "end": "left");
+$localeDirections: ("start": "left", "end": "right");
 
 $color-primary: #1c3482;
 $color-green: #3ab637;
@@ -149,19 +148,18 @@ header {
       }
     }
     li {
-      &:nth-child(2) {
-        > ul.mega-menu:after {
-          background-position-x: -128px;
-        }
-      }
-      &:nth-child(3) {
-        > ul.mega-menu:after {
-          background-position-x: -253px;
+      $step: 128;
+      @for $i from 1 to 6 {
+        $value: ($i - 1) * $step;
+        &:nth-child(#{$i}) {
+          > ul.mega-menu:after {
+            background-position-x: calc(100% + #{$value}px);
+          }
         }
       }
     }
     > ul {
-      text-align: left;
+      text-align: right;
       @media(max-width: 999px) {
         display: block;
         margin-top: 10px;
@@ -181,16 +179,18 @@ header {
           padding: 8px;
         }
       }
-      > li:hover {
-        > a {
-          color: #23527c;
+      > li {
+        &:hover {
+          > a {
+            color: #23527c;
+          }
         }
       }
       @media (min-width: 1000px) {
         position: absolute;
         left: -15px;
         right: -15px;
-        padding-left: 258px;
+        padding-right: 258px;
         bottom: 0;
         margin: 0;
       }
@@ -202,7 +202,7 @@ header {
           right: 0;
           top: 0;
           bottom: 0;
-          background: url(#{$imagesDir}menu-ribbon.png) no-repeat left 122px;
+          background: url(#{$imagesDir}menu-ribbon-ltr.png) no-repeat right 122px;
           background-attachment: fixed;
           position: absolute;
           pointer-events: none;
@@ -220,10 +220,10 @@ header {
           &:before {
             content: "";
             position: absolute;
-            right: -58px;
-            left: 0px;
+            right: 0px;
+            left: -58px;
             top: -29px;
-            transform: skew(-45deg);
+            transform: skew(45deg);
             bottom: 0;
             background: #000;
             opacity: 0.1;
@@ -244,9 +244,9 @@ header {
         display: block;
         font-size: 20px;
         font-weight: 500;
-        padding: 10px 0 10px 20px;
+        padding: 10px 20px 10px 0px;
         position: relative;
-        margin-left: 24px;
+        margin-right: 24px;
         width: 87px;
         &:before {
           content: "";
@@ -275,7 +275,7 @@ header {
       position: absolute;
       width: 100%;
       height: 100%;
-      left: -46%;
+      left: -50%;
       top: 0px;
       background-color: $color-green;
       transform: skew(-30deg);
@@ -364,8 +364,8 @@ body.sticky-header {
       right: 0;
       > ul {
         position: relative;
-        float: left;
-        text-align: right;
+        float: right;
+        text-align: left;
       }
     }
   }
@@ -377,7 +377,7 @@ body.sticky-header {
 }
 
 .right-bordered-link {
-  border-right: 2px solid #fff;
+  border-left: 2px solid #fff;
   padding: 3px 10px;
   display: block;
 }
@@ -937,7 +937,7 @@ body.contact .content {
 
 .flex-item .inner img {
   width: 165%;
-  transform: translateX(17%) translateY(-17%) rotate(-45deg);
+  transform: translateX(-17%) translateY(-17%) rotate(-45deg);
 }
 
 .gallery-archive {
@@ -1006,9 +1006,9 @@ body.contact .content {
   &:before {
     content: "";
     //background-color: #5d962a;
-    transform: skew(-45deg);
+    transform: skew(45deg);
     position: absolute;
-    right: -100px;
+    left: -100px;
     width: 40%;
     min-width: 300px;
     height: 100%;
@@ -1591,9 +1591,9 @@ body.rtl {
 .media-list {
   .media-list-item {
     @extend .media;
-    border-right-width: 2px;
-    border-right-style: solid;
-    padding: 3px 2px 3px 0;
+    border-left-width: 2px;
+    border-left-style: solid;
+    padding: 3px 0 3px 2px;
 
     .media-list-item-body {
       @extend .media-body
@@ -1605,8 +1605,8 @@ body.rtl {
 
     .media-list-item-image {
       @extend .media-left;
-      padding-right: 0px;
-      padding-left: 10px;
+      padding-right: 10px;
+      padding-left: 0px;
     }
 
     .media-list-item-image img {

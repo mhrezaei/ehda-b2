@@ -3,7 +3,7 @@
 @endif
 
 {{ null, $showMoreColorClass = "link-$color" }}
-{{ null, $itemsColorClass = "border-right-$color" }}
+{{ null, $itemsColorClass = "border-start-$color" }}
 
 @if(isset($title) and $title)
     @include('front.frame.underlined_heading', [
@@ -11,7 +11,7 @@
         'color' => $color
     ])
 @endif
-<a href="#" class="floating-top-20 floating-left-15 {{ $showMoreColorClass }}">بیشتر</a>
+<a href="#" class="floating-top-20 floating-end-15 {{ $showMoreColorClass }}">بیشتر</a>
 <div class="media-list">
     @for($i = 0; $i < 6; $i++)
         <div class="media-list-item {{ $itemsColorClass }}">
@@ -24,7 +24,7 @@
                     <h5 class="media-list-item-heading">
                         آمار بالای نارسایی کلیه در کشور/ دستگاه‌های دیالیز فرسوده‌اند
                     </h5>
-                    <p class="text-gray text-left">۲۵ اسفند ۹۴</p>
+                    <p class="text-gray text-end">۲۵ اسفند ۹۴</p>
                 </div>
             </a>
         </div>

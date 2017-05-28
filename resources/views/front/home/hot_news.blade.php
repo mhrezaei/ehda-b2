@@ -1,5 +1,5 @@
 <div class="owl-carousel news-slider" dir="ltr">
-    <div class="item" dir="rtl">
+    <div class="item text-start">
         <a href="#" target="_blank">
             <img src="https://ehda.center/assets/photos/posts/slideshow/ED21600x600.jpg">
             <div class="slide-text">
@@ -8,7 +8,7 @@
             </div>
         </a>
     </div>
-    <div class="item" dir="rtl">
+    <div class="item text-start">
         <a href="#" target="_blank">
             <img src="https://ehda.center/assets/photos/posts/slideshow/afshin.jpg">
             <div class="slide-text">
@@ -19,7 +19,7 @@
             </div>
         </a>
     </div>
-    <div class="item" dir="rtl">
+    <div class="item text-start">
         <a href="#" target="_blank">
             <img src="https://ehda.center/assets/photos/posts/slideshow/s02.jpg">
             <div class="slide-text">
