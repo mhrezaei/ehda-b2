@@ -155,4 +155,9 @@ class TestController extends Controller
         $contactFormHTML = PostsServiceProvider::showPost('contact-us-form', ['showError' => true]);
         return view('front.test.about.main', compact('contactFormHTML'));
     }
+
+    public function volunteers()
+    {
+        return view('front.test.volunteers.main');
+    }
 }

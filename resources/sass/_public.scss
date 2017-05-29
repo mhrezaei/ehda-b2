@@ -1,0 +1,215 @@
+$startSide: map_get($localeDirections, 'start');
+$endSide: map_get($localeDirections, 'end');
+
+%border-solid {
+  border-style: solid;
+}
+
+@for $size from 1 to 6 {
+  .border-#{$size} {
+    @extend %border-solid;
+    border-width: #{$size}px;
+  }
+}
+
+@each $directionShort, $directionLong in $directions {
+  %border-#{$directionLong}-solid {
+    border-#{$directionLong}-style: solid;
+  }
+  @for $i from 1 to 10 {
+    $value: $i * 5;
+    .m#{$directionShort}#{$value} {
+      margin-#{$directionLong}: #{$value}px;
+    }
+    .p#{$directionShort}#{$value} {
+      padding-#{$directionLong}: #{$value}px;
+    }
+  }
+
+  @for $size from 1 to 6 {
+    .border-#{$directionLong}-#{$size} {
+      @extend %border-#{$directionLong}-solid;
+      border-#{$directionLong}-width: #{$size}px;
+    }
+  }
+}
+
+.media-list {
+  .media-list-item {
+    @extend .media;
+    border-#{$startSide}-width: 2px;
+    border-#{$startSide}-style: solid;
+    padding: 3px 0 3px 2px;
+
+    .media-list-item-body {
+      @extend .media-body
+    }
+
+    .media-list-item-heading {
+      @extend .media-heading
+    }
+
+    .media-list-item-image {
+      @extend .media-#{$startSide};
+      padding-#{$endSide}: 10px;
+      padding-#{$startSide}: 0px;
+    }
+
+    .media-list-item-image img {
+      height: 72px;
+      width: 72px;
+      object-fit: cover;
+    }
+
+    a {
+      @extend .text-black;
+      float: right;
+    }
+  }
+}
+
+.underlined-heading {
+  $borderSize: 3px;
+  @extend .border-bottom-black;
+  @extend .mb15;
+  border-bottom-width: #{$borderSize};
+  border-bottom-style: solid;
+
+  > span {
+    @extend .pb5;
+    @extend .pl5;
+    display: inline-block;
+    border-bottom-width: #{$borderSize};
+    border-bottom-style: solid;
+    margin-bottom: -#{$borderSize};
+  }
+}
+
+/* floating elements */
+%floating {
+  position: absolute;
+}
+
+@each $dShort, $dLong in $directions {
+  @for $i from 1 to 11 {
+    $value: $i * 5;
+    .floating-#{$dLong}-#{$value} {
+      @extend %floating;
+      #{$dLong}: #{$value}px;
+    }
+  }
+}
+
+@each $side, $direction in $localeDirections {
+  @for $i from 1 to 11 {
+    $value: $i * 5;
+    .floating-#{$side}-#{$value} {
+      @extend %floating;
+      #{$direction}: #{$value}px;
+    }
+  }
+
+  .text-#{$side} {
+    @extend .text-#{$direction};
+  }
+
+  @each $colorName, $colorCode in $colors {
+    .border-#{$side}-#{$colorName} {
+      @extend .border-#{$direction}-#{$colorName};
+    }
+  }
+
+  .media-#{$side} {
+    @extend .media-#{$direction};
+  }
+}
+
+img%img-cover {
+  object-fit: cover;
+}
+
+@for $i from 2 to 15 {
+  $width: 50 * $i;
+  @for $j from 2 to 15 {
+    $height: 50 * $j;
+    img.img-cover-#{$width}-#{$height} {
+      @extend %img-cover;
+      width: #{$width}px;
+      height: #{$height}px;
+    }
+  }
+}
+
+.grayscale {
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+}
+
+.yt-gallery {
+  .yt-gallery-item {
+    position: relative;
+    img {
+      $transition: filter 1s, border .2s;
+      -webkit-transition: #{$transition};
+      -moz-transition: #{$transition};
+      -ms-transition: #{$transition};
+      -o-transition: #{$transition};
+      transition: #{$transition};
+    }
+    .yt-gallery-item-text {
+      $transition: opacity .2s;
+      @extend .border-top-1;
+      @extend .border-top-gray;
+      @extend .text-center;
+      -webkit-transform: #{$transition};
+      -moz-transform: #{$transition};
+      -ms-transform: #{$transition};
+      -o-transform: #{$transition};
+      transform: #{$transition};
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, .5);
+      padding: 3px 5px;
+      color: #000;
+      opacity: 0;
+    }
+    &.focus {
+      img {
+        @extend .border-5;
+      }
+      .yt-gallery-item-text {
+        opacity: 1;
+      }
+    }
+    &.unfocus {
+      img {
+        @extend .grayscale;
+        border-width: 0;
+      }
+    }
+  }
+
+  ul.waterfall {
+    padding: 0;
+
+    li {
+      left: 0;
+      top: 0;
+      opacity: 0;
+      z-index: 0;
+
+      &.show {
+        opacity: 1;
+        transition: all 0.3s, top 1s;
+      }
+
+      div {
+        transition: all 0.5s;
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

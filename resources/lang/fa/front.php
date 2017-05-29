@@ -73,6 +73,8 @@ return [
     'teammates'                                => 'کارمندان مجموعه',
     'no_result_found'                          => 'نتیجه‌ای یافت نشد.',
     'view_on_map'                              => 'مشاهده بر روی نقشه', // TODO: new
+    'volunteers'                               => 'سفیران', // TODO: new
+    'special_volunteers'                       => 'سفیران ویژه', // TODO: new
 
     'footer' => [
         'copy_right' => 'تمامی حقوق برای ::site محفوظ است.',
