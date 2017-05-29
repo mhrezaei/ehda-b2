@@ -935,7 +935,6 @@ class Post extends Model
 	{
 		$this->spreadMeta();
 	    $commentSetting = setting()->ask('receiving_comments')->gain();
-
 		if((($commentSetting === null) or $commentSetting) and
 		    (user()->exists or $this->allow_anonymous_comment) and
 			(!$this->disable_receiving_comments)

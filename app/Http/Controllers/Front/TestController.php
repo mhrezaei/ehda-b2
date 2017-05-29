@@ -152,12 +152,26 @@ class TestController extends Controller
 
     public function about()
     {
-        $contactFormHTML = PostsServiceProvider::showPost('contact-us-form', ['showError' => true]);
+        $contactFormHTML = PostsServiceProvider::showPost('contact-us', ['showError' => false]);
         return view('front.test.about.main', compact('contactFormHTML'));
     }
 
     public function volunteers()
     {
         return view('front.test.volunteers.main');
+    }
+
+    public function faqs()
+    {
+        $faqsHTML = PostsServiceProvider::showList(['type' => 'faq']);
+
+        $newFaqPost = Post::findBySlug('ask-question');
+        if ($newFaqPost->exists and $newFaqPost->canRecieveComments()) {
+            $getNewFaq = true;
+            $newFaqForm = PostsServiceProvider::showPost($newFaqPost);
+        } else {
+            $getNewFaq = false;
+        }
+        return view('front.test.faqs.main', compact('faqsHTML', 'getNewFaq', 'newFaqForm'));
     }
 }

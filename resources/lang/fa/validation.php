@@ -483,6 +483,7 @@ return [
         'increasing'          => 'زیاد‌شونده', // TODO: new
         'losed_color_code'    => 'کد رنگ قسمت از دست رفته', // TODO: new
         'remained_color_code' => 'کد رنگ قسمت باقی مانده', // TODO: new
+        'fields'              => 'فیلدها', // TODO: new
     ],
 
     "http" => [

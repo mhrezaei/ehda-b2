@@ -235,6 +235,7 @@ Route::group(['namespace' => 'Front', 'middleware' => ['DetectLanguage', 'Settin
         Route::get('post/single', 'TestController@post_single');
         Route::get('post/archive', 'TestController@post_archive');
         Route::get('volunteers', 'TestController@volunteers');
+        Route::get('faqs', 'TestController@faqs');
     });
 
     Route::get('about', 'TestController@about');
