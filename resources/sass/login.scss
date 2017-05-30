@@ -30,11 +30,24 @@ body {
   }
 }
 
-.form-group .fa {
-  position: absolute;
-  right: 10px;
-  top: 17px;
-  color: #999;
+.form-group {
+  .fa {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+    color: #999;
+  }
+  .col-lg-12,
+  .col-md-12,
+  .col-sm-12,
+  .col-xs-12 {
+    .fa {
+      position: absolute;
+      right: 25px;
+      top: 17px;
+      color: #999;
+    }
+  }
 }
 
 .log-status.wrong-entry {

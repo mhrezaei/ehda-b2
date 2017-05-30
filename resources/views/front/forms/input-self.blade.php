@@ -10,7 +10,7 @@
                     type="{{$type or 'text'}}"
                     id="{{$id or ''}}"
                     name="{{$name}}" value="{{$value or ''}}"
-                    class="form-control {{$class or ''}}"
+                    class="form-control @if(isset($icon) and $icon) has-icon @endif {{$class or ''}}"
                     style="{{$style or ''}}"
                     placeholder="{{$placeholder or ''}}"
                     onkeyup="{{$on_change or ''}}"
@@ -20,6 +20,9 @@
                     error-value="{{$error_value or ''}}"
                     {{$extra or ''}}
             >
+            @if(isset($icon) and $icon)
+                <i class="fa fa-{{ $icon }}"></i>
+            @endif
             @if(isset($addon))
                 <span class="input-group-addon f10 {{$addon_class or ''}}"
                       onclick="{{$addon_click or ''}}">{{ $addon }}</span>

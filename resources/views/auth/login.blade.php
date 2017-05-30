@@ -1,23 +1,14 @@
+@extends('auth.form_frame', ['showLogo' => true])
+
 @section('head')
+    @parent
     <title>
         {{ setting()->ask('site_title')->gain() }} | {{ trans('front.login') }}
     </title>
     @include('front.frame.open_graph_meta_tags', ['description' => trans('front.login')])
-    {{ Html::style('assets/css/login.min.css') }}
 @endsection
 
-@include('front.frame.header')
-
-{{ null, $background = setting()->ask('login_page_background')->in(getLocale())->gain() }}
-<body @if($background) style="background-image: url('{{ url($background) }}')" @endif>
-<div class="login-form bg-lightGray">
-    {{ null, $logo = setting()->ask('site_logo_small')->gain() }}
-    @if($logo)
-        <div class="text-center mb10">
-            <img src="{{ url($logo) }}" style="width: 100px">
-        </div>
-    @endif
-
+@section('formBox')
     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group">
@@ -51,20 +42,20 @@
             @endif
         </div>
     </form>
-</div>
+@endsection
 
-{!! Html::script ('assets/libs/jquery/jquery-3.2.1.min.js') !!}
-<script>
-    $(document).ready(function () {
-        $('.log-btn').click(function () {
-            $('.log-status').addClass('wrong-entry');
-            $('.alert').fadeIn(500);
-            setTimeout("$('.alert').fadeOut(1500);", 3000);
-        });
-        $('.form-control').keypress(function () {
-            $('.log-status').removeClass('wrong-entry');
-        });
+@section('endOfBody')
+    <script>
+        $(document).ready(function () {
+            $('.log-btn').click(function () {
+                $('.log-status').addClass('wrong-entry');
+                $('.alert').fadeIn(500);
+                setTimeout("$('.alert').fadeOut(1500);", 3000);
+            });
+            $('.form-control').keypress(function () {
+                $('.log-status').removeClass('wrong-entry');
+            });
 
-    });
-</script>
-</body>
+        });
+    </script>
+@endsection

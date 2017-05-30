@@ -217,7 +217,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => '{lang}', 'middleware' => ['Det
     // reset password
     Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm');
     Route::post('/password/reset', 'ForgotPasswordController@sendResetLinkEmail');
-    Route::get('/password/token', 'ForgotPasswordController@getToken');
+    Route::get('/password/token/{haveCode?}', 'ForgotPasswordController@getToken');
     Route::post('/password/token', 'ForgotPasswordController@checkToken');
     Route::get('/password/new', 'ForgotPasswordController@newPassword');
     Route::post('/password/new', 'ForgotPasswordController@changePassword');

@@ -34,6 +34,8 @@ class ForgotPasswordController extends Controller
     use SendsPasswordResetEmails;
     use ManageControllerTrait;
 
+    private static $defaultTokenExpireTime = 15; // in minutes
+
     public static $resetTokenLength = 6;
 
     /**
@@ -56,28 +58,27 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(ResetPasswordRequest $request)
     {
-//        dd(__FILE__);
-
-//        $this->validate($request, ['email' => 'required|email']);
 
         $user = User::where([
-            'code_melli' => $request->code_melli,
+            'code_melli'   => $request->code_melli,
             $request->type => $request[$request->type]
         ])->first();
 
+
         if (!$user) {
             return $this->jsonAjaxSaveFeedback(false, [
-                'ok' => 0,
+                'ok'             => 0,
                 'danger_message' => trans('passwords.user'),
             ]);
         }
 
         $resetToken = rand(str_repeat(1, self::$resetTokenLength), str_repeat(9, self::$resetTokenLength));
 
+        $tokenExpireTime = setting()->ask('password_token_expire_time')->gain() ?: self::$defaultTokenExpireTime;
         User::store([
-            'id' => $user->id,
-            'reset_token' => Hash::make($resetToken),
-            'reset_token_expire' => Carbon::now()->addMinute(setting()->ask('password_token_expire_time')->gain())->toDateTimeString(),
+            'id'                 => $user->id,
+            'reset_token'        => Hash::make($resetToken),
+            'reset_token_expire' => Carbon::now()->addMinute($tokenExpireTime)->toDateTimeString(),
         ]);
 
         session()->flash('resetingPasswordNationalId', $user->code_melli);
@@ -123,9 +124,9 @@ class ForgotPasswordController extends Controller
 
         if ($sendingSuccess) {
             return $this->jsonAjaxSaveFeedback(true, [
-                'success_message' => trans('passwords.sent'),
+                'success_message'  => trans('passwords.sent'),
                 'success_redirect' => url(SettingServiceProvider::getLocale() . '/password/token'),
-                'redirectTime' => 3000,
+                'redirectTime'     => 3000,
             ]);
         } else {
             return $this->jsonAjaxSaveFeedback(false, [
@@ -138,7 +139,7 @@ class ForgotPasswordController extends Controller
     {
         if (session()->get('resetingPasswordNationalId') or ($haveCode == 'code')) {
             session()->keep(['resetingPasswordNationalId']);
-            return view('auth.passwords.token');
+            return view('auth.passwords.token', compact('haveCode'));
         } else {
             return redirect(SettingServiceProvider::getLocale() . '/password/reset');
         }
@@ -161,14 +162,14 @@ class ForgotPasswordController extends Controller
                     session(['resetPasswordVerifiedUser' => $user->code_melli]);
 
                     return $this->jsonAjaxSaveFeedback(true, [
-                        'success_message' => trans('passwords.token_verified'),
+                        'success_message'  => trans('passwords.token_verified'),
                         'success_redirect' => url(SettingServiceProvider::getLocale() . '/password/new'),
-                        'redirectTime' => 3000,
+                        'redirectTime'     => 3000,
                     ]);
 
                 } else {
                     return $this->jsonAjaxSaveFeedback(false, [
-                        'danger_message' => trans('passwords.token_expired') . ' <br /><a href="' . url(SettingServiceProvider::getLocale() . '/password/reset') . '">' . trans('passwords.get_new_token') . '</a>'
+                        'danger_message' => trans('passwords.token_expired') . ' <br /><a class="link-red" href="' . url(SettingServiceProvider::getLocale() . '/password/reset') . '">' . trans('passwords.get_new_token') . '</a>'
                     ]);
                 }
             } else {
@@ -185,11 +186,11 @@ class ForgotPasswordController extends Controller
 
     public function newPassword()
     {
-        if (session()->get('resetPasswordVerifiedUser')) {
-            return view('auth.passwords.new');
-        } else {
-            return redirect(SettingServiceProvider::getLocale() . '/password/reset');
-        }
+//        if (session()->get('resetPasswordVerifiedUser')) {
+        return view('auth.passwords.new');
+//        } else {
+//            return redirect(SettingServiceProvider::getLocale() . '/password/reset');
+//        }
     }
 
     public function changePassword(NewPasswordRequest $request)
@@ -202,7 +203,7 @@ class ForgotPasswordController extends Controller
 
             if ($user) {
                 $storeData = [
-                    'id' => $user->id,
+                    'id'       => $user->id,
                     'password' => Hash::make($request['new_password']),
                 ];
 
@@ -215,9 +216,9 @@ class ForgotPasswordController extends Controller
                 }
 
                 return $this->jsonAjaxSaveFeedback(User::store($storeData), [
-                    'success_message' => trans('passwords.reset'),
+                    'success_message'  => trans('passwords.reset'),
                     'success_redirect' => $targetUrl,
-                    'redirectTime' => 3000,
+                    'redirectTime'     => 3000,
                 ]);
             }
         }

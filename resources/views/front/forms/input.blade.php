@@ -17,7 +17,6 @@ if (isset($disabled) and $disabled) {
 }
 
 
-
 if (isset($value) and is_object($value))
     $value = $value->$name;
 
@@ -53,20 +52,20 @@ if (!isset($in_form))
 
         @endif
         <div class="col-sm-12">
-            @include('forms.input-self')
+            @include('front.forms.input-self')
             <span class="help-block persian {{$hint_class or ''}}" style="{{$hint_style or ''}}">
 					{{ $hint or '' }}
 				</span>
 
-            @if ($errors->has('email'))
-                <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
+            @if ($errors->has($name))
+                <span class="help-block error">
+                                    <strong>{{ $errors->first($name) }}</strong>
                                 </span>
             @endif
 
         </div>
         </div>
     @else
-        @include('forms.input-self')
+        @include('front.forms.input-self')
     @endif
 @endif
