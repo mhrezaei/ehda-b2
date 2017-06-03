@@ -9,6 +9,7 @@ use App\Models\Receipt;
 use App\Models\Test\Meta;
 use App\Models\User;
 use App\Providers\PostsServiceProvider;
+use App\Providers\UploadServiceProvider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -173,5 +174,37 @@ class TestController extends Controller
             $getNewFaq = false;
         }
         return view('front.test.faqs.main', compact('faqsHTML', 'getNewFaq', 'newFaqForm'));
+    }
+
+    public function works_send()
+    {
+        $postsPrefix = 'send-work-';
+        UploadServiceProvider::setDefaultUserType('client');
+        UploadServiceProvider::setDefaultSection('work');
+
+        // get related posts
+        $posts = Post::selector(['type' => 'commenting'])
+            ->where('slug', 'like', "$postsPrefix%")
+            ->get();
+
+        // remove posts that are related to inactive file types (in config/upload.php)
+        foreach ($posts as $key => $post) {
+            $fileType = str_replace($postsPrefix, '', $post->slug);
+            if (UploadServiceProvider::isActive($fileType)) {
+                $post->fileType = $fileType;
+            } else {
+                $posts->forget($key);
+            }
+        }
+
+        $uploadUrl = route('works.upload');
+        $sendingArea = view('front.test.works.sending_area.main', compact('posts', 'uploadUrl'));
+        $postContentHTML = PostsServiceProvider::showPost('send-works-text', ['externalBlade' => $sendingArea]);
+        return view('front.test.works.main', compact('postContentHTML'));
+    }
+
+    public function works_upload()
+    {
+        return response()->json(['success' => 'fileName.gif']);
     }
 }

@@ -4,6 +4,7 @@
 		id="{{$id or ''}}"
 		name="{{$name}}"
 		value="{{$value or ''}}"
+		class="{{$class or ''}}"
 		{{$extra or ''}}
 	>
 @endif

@@ -236,9 +236,14 @@ Route::group(['namespace' => 'Front', 'middleware' => ['DetectLanguage', 'Settin
         Route::get('post/archive', 'TestController@post_archive');
         Route::get('volunteers', 'TestController@volunteers');
         Route::get('faqs', 'TestController@faqs');
+        Route::get('works/send', 'TestController@works_send');
+        Route::post('works/file/upload', 'TestController@works_upload')->name('works.upload');
     });
 
     Route::get('about', 'TestController@about');
     Route::post('/register/new', 'FrontController@register');
+
+    // saving comments for all posts
+    Route::post('/comment', 'PostController@submit_comment')->name('comment.submit');
 
 });

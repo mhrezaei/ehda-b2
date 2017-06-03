@@ -478,12 +478,18 @@ return [
         'seat'       => 'سمت',
         'short_view' => 'نمایش مختصر',
 
-        'period_time'         => 'مدت زمان دوره', // TODO: new
-        'decreasing'          => 'کم‌شونده', // TODO: new
-        'increasing'          => 'زیاد‌شونده', // TODO: new
-        'losed_color_code'    => 'کد رنگ قسمت از دست رفته', // TODO: new
-        'remained_color_code' => 'کد رنگ قسمت باقی مانده', // TODO: new
-        'fields'              => 'فیلدها', // TODO: new
+        'period_time'                  => 'مدت زمان دوره', // TODO: new
+        'decreasing'                   => 'کم‌شونده', // TODO: new
+        'increasing'                   => 'زیاد‌شونده', // TODO: new
+        'losed_color_code'             => 'کد رنگ قسمت از دست رفته', // TODO: new
+        'remained_color_code'          => 'کد رنگ قسمت باقی مانده', // TODO: new
+        'fields'                       => 'فیلدها', // TODO: new
+        'rules'                        => 'قوانین', // TODO: new
+        'file_type'                    => 'نوع فایل', // TODO: new
+        'submission_work_subject'      => 'عنوان اثر', // TODO: new
+        'submission_work_owner_name'   => 'نام صاحب اثر', // TODO: new
+        'submission_work_owner_mobile' => 'تلفن همراه صاحب اثر', // TODO: new
+        'submission_work_owner_email'  => 'ایمیل صاحب اثر', // TODO: new
     ],
 
     "http" => [

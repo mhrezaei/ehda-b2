@@ -12,15 +12,28 @@
             'title',
             'text',
         ] }}
-    {{ null, $fields = (!isset($fields) or !is_array($fields)) ? [] : $fields }}
+
+    {{ null,
+        $fields = (!isset($fields) or !is_array($fields))
+            ? CommentServiceProvider::translateFields($post->fields)
+            : $fields
+        }}
+
+    {{ null,
+        $rules = (!isset($rules) or !is_array($rules))
+            ? CommentServiceProvider::translateRules($post->rules)
+            : $rules
+        }}
+
     {{ null, $inputSize = array_flip($availableFields) }}
     {{ null, $inputSize = array_fill_keys($availableFields, 12) }}
+
 
     @foreach($availableFields as $fieldName)
         @if(array_key_exists($fieldName, $fields))
             {{ null, $inputData[$fieldName]['condition'] = true }}
             {{ null, $inputData[$fieldName]['class'] =
-                ((isset($fields[$fieldName]['required']) and $fields[$fieldName]['required']) ? 'form-required' : '') }}
+                ((array_key_exists($fieldName, $rules) and (array_search('required', $rules[$fieldName]) !== false)) ? 'form-required' : '') }}
             {{ null, $inputData[$fieldName]['label'] = $fields[$fieldName]['label'] }}
             @if(is_numeric($fields[$fieldName]['size'])
                 and is_int((int) $fields[$fieldName]['size'])

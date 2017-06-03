@@ -23,11 +23,12 @@
 			>{{ $blank_label or '' }}</option>
 		@endif
 		@foreach($options as $option)
-			<option value="{{$option[isset($value_field)? $value_field : 'id']}}"
-					@if(isset($value) and $value==$option[isset($value_field)? $value_field : 'id'])
+			{{ null, $optionValue = $option[isset($value_field) ? $value_field : 'id'] }}
+			<option value="{{ $optionValue }}"
+					@if(isset($value) and $value == $optionValue)
 						selected
 					@endif
-			>{{$option[isset($caption_field)? $caption_field : 'title']}}</option>
+			>{{$option[isset($caption_field) ? $caption_field : 'title']}}</option>
 		@endforeach
 	</select>
 

@@ -167,6 +167,7 @@ class PostsServiceProvider extends ServiceProvider
             'externalBlade' => '',
             'preview'   => false,
             'showError' => true,
+            'variables' => [],
         ]);
 
         $post = self::smartFindPost($identifier);
@@ -190,7 +191,7 @@ class PostsServiceProvider extends ServiceProvider
 
         // render view
         $externalBlade = $data['externalBlade'];
-        return view($viewFolder . '.main', compact('post', 'viewFolder', 'externalBlade'));
+        return view($viewFolder . '.main', compact('post', 'viewFolder', 'externalBlade') + $data['variables']);
     }
 
     public static function showError($errorMessage, $ajaxRequest = false)

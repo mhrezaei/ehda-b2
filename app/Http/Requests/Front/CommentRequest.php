@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Front;
 
 use App\Models\Comment;
+use App\Models\Post;
+use App\Providers\CommentServiceProvider;
 use App\Providers\ValidationServiceProvider;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
@@ -31,8 +33,11 @@ class CommentRequest extends FormRequest
      */
     public function rules()
     {
-        $input = $this->all();
+        $postRules = CommentServiceProvider::getPostCommentRules($this->post_id);
+        dd($postRules);
+
         return [
+            'post_id' => 'required|exists:',
             'text' => 'required|persian:60',
         ];
     }

@@ -76,6 +76,36 @@ return [
     'view_on_map'                              => 'مشاهده بر روی نقشه', // TODO: new
     'volunteers'                               => 'سفیران', // TODO: new
     'special_volunteers'                       => 'سفیران ویژه', // TODO: new
+    'send_works'                               => 'ارسال آثار', // TODO: new
+    'send_work'                                => 'ارسال اثر', // TODO: new
+
+    'file_types' => [
+        'image' => [
+            'title'         => 'تصویری',
+            'dropzone_text' => 'تصویر خود را اینجا رها کنید'
+        ],
+        'text'  => [
+            'title'         => 'متنی',
+            'dropzone_text' => 'فایل متنی خود را اینجا رها کنید'
+        ],
+        'video' => [
+            'title'         => 'ویدیویی',
+            'dropzone_text' => 'ویدیو خود را اینجا رها کنید'
+        ],
+        'audio' => [
+            'title'         => 'صوتی',
+            'dropzone_text' => 'فایل صوتی خود را اینجا رها کنید'
+        ],
+    ],  // TODO: new
+
+    'upload' => [
+        'errors' => [
+            'size'   => 'حجم فایل بسیاز زیاد است.',
+            'type'   => 'نوع فایل قابل قبول نیست.',
+            'server' => 'فرایند آپلود فایل در سرور با ارور {{statusCode}} متوقف شد.',
+            'limit'  => 'نمی‌توانید فایل دیگری آپلود کنید.',
+        ],
+    ], // TODO: new
 
     'footer' => [
         'copy_right' => 'تمامی حقوق برای ::site محفوظ است.',

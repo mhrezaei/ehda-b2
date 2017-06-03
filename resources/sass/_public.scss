@@ -2,7 +2,7 @@ $startSide: map_get($localeDirections, 'start');
 $endSide: map_get($localeDirections, 'end');
 
 // Font Size --start
-@for $i from 5 to 29 {
+@for $i from 5 to 101 {
   .f#{$i} {
     font-size: 1px * $i;
     @if($i<10) {
@@ -273,7 +273,7 @@ $endSide: map_get($localeDirections, 'end');
 }
 
 @each $dShort, $dLong in $directions {
-  @for $i from 1 to 11 {
+  @for $i from 0 to 11 {
     $value: $i * 5;
     .floating-#{$dLong}-#{$value} {
       @extend %floating;
@@ -283,7 +283,7 @@ $endSide: map_get($localeDirections, 'end');
 }
 
 @each $side, $direction in $localeDirections {
-  @for $i from 1 to 11 {
+  @for $i from 0 to 11 {
     $value: $i * 5;
     .floating-#{$side}-#{$value} {
       @extend %floating;
@@ -405,3 +405,50 @@ img%img-cover {
   @extend .f12;
   font-weight: normal;
 }
+
+// DropZone --start
+.dropzone {
+  $baseColor: map_get($colors, 'blue');
+  border: 2px dashed #{$baseColor} !important;
+  background: lighten($baseColor, 50%) !important;
+
+  .dz-preview {
+    @extend .border-2;
+
+    &.dz-success {
+      @extend .border-green;
+    }
+    &.dz-error {
+      @extend .border-red;
+    }
+
+    .dz-details, .dz-image {
+      z-index: 0 !important;
+    }
+
+    .dz-image {
+      border-radius: 0 !important;
+    }
+
+    .dz-remove {
+      $boxSize: 25;
+      $overFlow: 12;
+      $borderColor: map_get($colors, 'gray');
+      @extend .fa , .fa-remove, .text-gray, %floating, .bg-white, .pt5;
+      display: inline-block !important;
+      top: -#{$overFlow}px;
+      #{$endSide}: -#{$overFlow}px;
+      width: #{$boxSize}px;
+      height: #{$boxSize}px;
+      border-radius: 50%;
+      border: 1px solid #{$borderColor} !important;
+      opacity: .8;
+      transition: opacity .7s;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+// DropZone --end
