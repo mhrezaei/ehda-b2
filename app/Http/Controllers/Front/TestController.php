@@ -12,6 +12,8 @@ use App\Providers\PostsServiceProvider;
 use App\Providers\UploadServiceProvider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Testing\MimeType;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Test\Post as PostOld;
 
@@ -179,13 +181,14 @@ class TestController extends Controller
     public function works_send()
     {
         $postsPrefix = 'send-work-';
-        UploadServiceProvider::setDefaultUserType('client');
-        UploadServiceProvider::setDefaultSection('work');
+        UploadServiceProvider::setUserType('client');
+        UploadServiceProvider::setSection('work');
 
         // get related posts
         $posts = Post::selector(['type' => 'commenting'])
             ->where('slug', 'like', "$postsPrefix%")
             ->get();
+
 
         // remove posts that are related to inactive file types (in config/upload.php)
         foreach ($posts as $key => $post) {
@@ -197,8 +200,7 @@ class TestController extends Controller
             }
         }
 
-        $uploadUrl = route('works.upload');
-        $sendingArea = view('front.test.works.sending_area.main', compact('posts', 'uploadUrl'));
+        $sendingArea = view('front.test.works.sending_area.main', compact('posts'));
         $postContentHTML = PostsServiceProvider::showPost('send-works-text', ['externalBlade' => $sendingArea]);
         return view('front.test.works.main', compact('postContentHTML'));
     }

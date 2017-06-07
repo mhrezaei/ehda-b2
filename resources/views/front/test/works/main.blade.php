@@ -2,7 +2,7 @@
 
 @section('head')
     <title>{{ setting()->ask('site_title')->gain() }} | {{ trans('front.send_works') }}</title>
-@endsection
+@append
 
 @section('content')
     <style>

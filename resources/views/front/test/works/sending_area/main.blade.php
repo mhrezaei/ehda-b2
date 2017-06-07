@@ -8,7 +8,6 @@
 
                 {{-- generating array for options of select element that will be used for selecting file type--}}
                 {{ null, $selectOptions[] = ['id' => $post->id, 'title' => trans("front.file_types.$post->fileType.title")] }}
-
                 @if($post->fields)
                     {{ null, $fields[$post->id] = explodeNotEmpty(',' , $post->fields) }}
                     @foreach($fields[$post->id] as $fieldIndex => $fieldValue)
@@ -56,29 +55,10 @@
 
 <div class="row">
     <div class="col-xs-12">
-        @section('head')
-            @parent
-            {!! Html::style('assets/css/dropzone.min.css') !!}
-        @endsection
         @section('endOfBody')
-            @parent
-            {!! Html::script('assets/libs/dropzone/dropzone.min.js') !!}
             {!! Html::script('assets/libs/jquery.form.min.js') !!}
             {!! Html::script('assets/js/forms.min.js') !!}
             <script>
-                // if we miss this command, every elements with "dropzone" class will be automatically change to dropzone
-                Dropzone.autoDiscover = false;
-
-                // setting default options for all dropzone uploaders in this page
-                Dropzone.prototype.defaultOptions.url = "{{ $uploadUrl }}";
-                Dropzone.prototype.defaultOptions.addRemoveLinks = true;
-                Dropzone.prototype.defaultOptions.dictRemoveFile = "";
-                Dropzone.prototype.defaultOptions.dictCancelUpload = "";
-                Dropzone.prototype.defaultOptions.dictFileTooBig = "{{ trans('front.upload.errors.size') }}";
-                Dropzone.prototype.defaultOptions.dictInvalidFileType = "{{ trans('front.upload.errors.type') }}";
-                Dropzone.prototype.defaultOptions.dictResponseError = "{{ trans('front.upload.errors.server') }}";
-                Dropzone.prototype.defaultOptions.dictMaxFilesExceeded = "{{ trans('front.upload.errors.limit') }}";
-
 
                 // convert $fields array to json to be used in js code
                 var fields = {!! json_encode($fields) !!};
@@ -119,6 +99,13 @@
                     $(this).show();
                 };
 
+                function customResetForm() {
+                    $.each(Dropzone.instances, function (index, obj) {
+                        obj.removeAllFiles();
+                    });
+                    $('input[type=hidden].optional-input').val('');
+                }
+
                 $(document).ready(function () {
 
                     $('#file-type').change(function () {
@@ -138,21 +125,38 @@
                     }).change();
                 });
             </script>
-        @endsection
+        @append
 
+        {{ null, \App\Providers\UploadServiceProvider::setDefaultJsConfigs([
+//                'events' => [
+//                    'complete' => <<< JS
+//                    function (file) {
+//                        console.log(this.getAcceptedFiles());
+//                        window.tf = this.getAcceptedFiles();
+//                    }
+//JS
+//                ]
+        ]) }}
         {{-- generate uploaders panel for all files types --}}
         @foreach($fileTypes as $fileType)
             {{ null, $dataField = "{$fileType}_uploader" }}
-            {!! UploadServiceProvider::showUploader($fileType, [
-                'id' => "$fileType-uploader",
+            {{-- id of whole dropzone element --}}
+            {{ null, $id = "$fileType-uploader" }}
+            {{-- name of dropzone object that will be created (if not set it will be automatically generated) --}}
+            {{ null, $varName = camel_case($id . '-dropzone') }}
+            {!! UploadServiceProvider::dropzoneUploader($fileType, [
+                'id' => $id,
+                'varName' => $varName,
                 'dataAttributes' => [
                     'field' => $dataField,
                 ],
+                'target' => "file-$fileType",
             ]) !!}
 
 
         @section('hiddenFields')
             @include('front.forms.hidden',[
+                'id' => "file-$fileType",
                 'name' => "file_$fileType",
                 'extra' => "data-field=$dataField",
                 'class' => 'optional-input',

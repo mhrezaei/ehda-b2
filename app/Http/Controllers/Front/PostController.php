@@ -57,24 +57,20 @@ class PostController extends Controller
             return $this->abort(410, true);
         }
 
-
         $request = $request->all();
         $request['ip'] = request()->ip();
         $request['user_id'] = user()->id;
         $request['type'] = $post->type;
 
         $callbackFn = <<<JS
-        $('.previous-comments').updateContent(function() {
-            $('.previous-comments').find('.collapse').each(function () { 
-                $(this).collapse(); 
-            }); 
-        });
+        if(isDefined(customResetForm) && $.isFunction(customResetForm)) {
+            customResetForm();
+        }
 JS;
 
 
         return $this->jsonAjaxSaveFeedback(Comment::store($request), [
             'success_callback' => $callbackFn,
-            'success_form_reset' => true,
             'success_feed_timeout' => 3000,
         ]);
     }

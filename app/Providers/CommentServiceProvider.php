@@ -115,6 +115,11 @@ class CommentServiceProvider extends ServiceProvider
                         if (count($fieldRules)) {
                             $rules[$fieldName] = $fieldRules;
                         }
+                    } else {
+                        $fieldRules = $parts[1];
+                        if ($fieldRules) {
+                            $rules[$fieldName] = $fieldRules;
+                        }
                     }
                 }
             }
@@ -138,6 +143,7 @@ class CommentServiceProvider extends ServiceProvider
                 return self::translateRules($rulesString, $detailed);
             }
         }
+
         return self::$defaultRules;
     }
 

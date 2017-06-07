@@ -33,13 +33,12 @@ class CommentRequest extends FormRequest
      */
     public function rules()
     {
-        $postRules = CommentServiceProvider::getPostCommentRules($this->post_id);
-        dd($postRules);
+        $postRules = CommentServiceProvider::getPostCommentRules($this->post_id, false);
+        $rules = array_merge([
+            'post_id' => 'required|exists:posts,id',
+        ], $postRules);
 
-        return [
-            'post_id' => 'required|exists:',
-            'text' => 'required|persian:60',
-        ];
+        return $rules;
     }
 
     public function all()
