@@ -50,7 +50,6 @@ class DropzoneController extends Controller
             session()->save();
 
             $uploadDir = implode(DIRECTORY_SEPARATOR, [
-                'temp',
                 UploadServiceProvider::getSectionRule($sectionName, 'uploadDir'),
                 $folderName,
             ]);
@@ -95,9 +94,8 @@ class DropzoneController extends Controller
                 }
             }
 
-            $file = new File($request->filePath);
 
-            UploadServiceProvider::removeFile($file);
+            UploadServiceProvider::removeFile($request->filePath);
         }
     }
 }

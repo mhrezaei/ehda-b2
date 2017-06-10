@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\File\File;
+use \Illuminate\Support\Facades\File as FilesFacades;
 use Symfony\Component\HttpFoundation\Request;
 
 class UploadServiceProvider extends ServiceProvider
@@ -24,6 +25,7 @@ class UploadServiceProvider extends ServiceProvider
     private static $defaultAcceptableLevelsNumber = 2; // number of level that can be changed to default value
     private static $rootUploadDir = 'uploads'; // Root Directory
     private static $randomNameLength = 16; // Length of Random Name to Be Generated for Uploading Files
+    private static $temporaryFolderName = 'temp';
 
     /**
      * Bootstrap the application services.
@@ -225,20 +227,63 @@ class UploadServiceProvider extends ServiceProvider
     public static function uploadFile($file, $uploadDir)
     {
         $newName = str_random(self::$randomNameLength) . '.' . $file->getClientOriginalExtension();
-        $finalUploadDir = self::$rootUploadDir . DIRECTORY_SEPARATOR . $uploadDir;
+        $finalUploadDir = implode(DIRECTORY_SEPARATOR, [
+            self::$rootUploadDir,
+            self::$temporaryFolderName,
+            $uploadDir
+        ]);
         return $file->move($finalUploadDir, $newName);
     }
 
     /**
      * Remove File Physically
      *
-     * @param File $file
+     * @param string|File $file
      *
      * @return bool
      */
     public static function removeFile($file)
     {
-        return \Illuminate\Support\Facades\File::delete($file->getPathname());
+        if(!$file instanceof File) {
+            if (FilesFacades::exists($file)) {
+                $file = new File($file);
+            } else {
+                return false;
+            }
+        }
+
+        if (FilesFacades::exists($file->getPathname())) {
+            return FilesFacades::delete($file->getPathname());
+        }
+    }
+
+    /**
+     * Searches for uploaded files and move theme from temporary folder
+     *
+     * @param \App\Http\Requests\Front\CommentRequest $request
+     */
+    public static function moveUploadedFiles(&$request)
+    {
+        foreach ($request->all() as $index => $value) {
+            if (ends_with($index, '_uploader')) {
+                $filesInfo = json_decode($value, true);
+                if ($filesInfo and is_array($filesInfo)) {
+                    foreach ($filesInfo as $key => $fileInfo) {
+                        if (FilesFacades::exists($fileInfo['realName'])) {
+                            $newPath = str_replace(self::$temporaryFolderName . DIRECTORY_SEPARATOR, '', $fileInfo['realName']);
+                            $pathParts = explode(DIRECTORY_SEPARATOR, $newPath);
+                            $newDir = implode(DIRECTORY_SEPARATOR, array_slice($pathParts, 0, count($pathParts) - 1));
+
+                            $file = new File($fileInfo['realName']);
+                            $file->move($newDir);
+                            $fileInfo['realName'] = $newPath;
+                            $filesInfo[$key] = $fileInfo;
+                        }
+                    }
+                }
+                $request->merge([$index => json_encode($filesInfo)]);
+            }
+        }
     }
 
     /**
@@ -376,4 +421,5 @@ class UploadServiceProvider extends ServiceProvider
 
         return $replacementKeys;
     }
+
 }
