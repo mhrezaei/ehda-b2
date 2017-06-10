@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
 use Illuminate\Support\ServiceProvider;
 
 class CommentServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
     private static $defaultRules = ['text' => 'required|persian:60'];
 
     /**
@@ -30,7 +34,9 @@ class CommentServiceProvider extends ServiceProvider
 
     /**
      * Translate standard "fields" value of a "commenting" post
+     *
      * @param $fieldsString string
+     *
      * @return array
      */
     public static function translateFields($fieldsString)
@@ -80,11 +86,13 @@ class CommentServiceProvider extends ServiceProvider
         return [];
     }
 
-
     /**
      * Translate standard "rules" value of a "commenting" post
-     * @param string $rulesString
-     * @param boolean $detailed If "false" this function will return rules of any field in a single item (request standard rule)
+     *
+     * @param string  $rulesString
+     * @param boolean $detailed If "false" this function will return rules of any field in a single item (request
+     *                          standard rule)
+     *
      * @return array
      */
     public static function translateRules($rulesString, $detailed = true)
@@ -130,7 +138,20 @@ class CommentServiceProvider extends ServiceProvider
         return [];
     }
 
-
+    /**
+     * <b>Returns validation rules of a post</b> <br>
+     * <b>Note:</b> <i>If there is no "rules" field in the post data, this function will returns default comment
+     * rules.</i>
+     *
+     * @param Post $post
+     * @param bool $detailed
+     * <ul>
+     * <li>true: rules of each field will be returned in an array</li>
+     * <li>false: rules of each field will be returned as string and in pipeline separated format</li>
+     * </ul>
+     *
+     * @return array
+     */
     public static function getPostCommentRules($post, $detailed = true)
     {
         $post = PostsServiceProvider::smartFindPost($post);
@@ -147,6 +168,11 @@ class CommentServiceProvider extends ServiceProvider
         return self::$defaultRules;
     }
 
+    /**
+     * Returns default commenting rules
+     *
+     * @return array
+     */
     public static function getDefaultCommentRules()
     {
         return self::$defaultRules;

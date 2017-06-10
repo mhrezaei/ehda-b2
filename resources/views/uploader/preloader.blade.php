@@ -58,7 +58,6 @@
                 } else {
                     targetEl.val('');
                 }
-                console.log($('#' + target))
             }
         }
 

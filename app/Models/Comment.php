@@ -14,10 +14,11 @@ class Comment extends Model
 
     public static $meta_fields = [
         'text',
-        'file_image',
-        'file_audio',
-        'file_video',
-        'file_text',
+        'image_uploader',
+        'audio_uploader',
+        'video_uploader',
+        'text_uploader',
+        'text_content',
         'description',
     ];
     protected $guarded = ['id'];

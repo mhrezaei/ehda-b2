@@ -21,7 +21,11 @@
         @foreach($dataAttributes as $fieldTitle => $filedValue)
             data-{{ $fieldTitle }}="{{ $filedValue }}"
         @endforeach
-    @endif >
+    @endif
+    @if(isset($target) and $target)
+        data-target="{{ $target }}"
+    @endif
+    >
     <div class="dz-message" data-dz-message>
         <i class="fa fa-cloud-upload f70 text-white"></i>
         <br/>
@@ -56,7 +60,7 @@
             });
 
             {{ $varName }}.on("removedfile", function (file) {
-                updateTarget(this, "{{ $target }}");
+                removeFromServer(file, $(this.element));
             });
 
             @if(isset($target) and $target)
@@ -65,7 +69,7 @@
                 });
                 // TODO: We should try to don't remove file item from view if it doesn't remove from the server.
                 {{ $varName }}.on("removedfile", function (file) {
-                    removeFromServer(file, $(this.element));
+                    updateTarget(this, "{{ $target }}");
                 });
             @endif
 
@@ -75,6 +79,11 @@
                     {{ $varName }}.on("{{ $eventName }}", {!! $eventValue !!});
                 @endforeach
             @endif
+
+            // Clear predefined data in hidden inputs after refresh
+            $.each(Dropzone.instances, function (index, obj) {
+                updateTarget(this, $(this.element).attr('data-target'));
+            });
         });
     </script>
 @append

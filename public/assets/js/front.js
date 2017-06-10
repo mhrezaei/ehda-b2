@@ -66,6 +66,19 @@ $.fn.scrollToView = function (extra, duration) {
     }, duration);
 };
 
+/**
+ * Returns all element containing self element if match "selector"
+ * @param {string} selector
+ * @returns jQuery
+ */
+$.fn.findFromThis = function (selector) {
+    var fountElements = $(this).find(selector);
+    if ($(this).is(selector)) {
+        fountElements = $.merge($(this), fountElements);
+    }
+    return fountElements;
+};
+
 String.prototype.ucfirst = function () {
     return this.replace(/(?:^|\s)\w/g, function (match) {
         return match.toUpperCase();
@@ -344,7 +357,7 @@ function loadingDialog(parameter, dialog) {
 }
 
 function openUrl(url, target) {
-    if(!isDefined(target)){
+    if (!isDefined(target)) {
         target = '_blank';
     }
     var win = window.open(url, target);

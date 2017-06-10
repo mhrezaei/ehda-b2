@@ -490,6 +490,13 @@ return [
         'submission_work_owner_name'   => 'نام صاحب اثر', // TODO: new
         'submission_work_owner_mobile' => 'تلفن همراه صاحب اثر', // TODO: new
         'submission_work_owner_email'  => 'ایمیل صاحب اثر', // TODO: new
+
+        'name'           => 'نام', // TODO: new
+        'image_uploader' => 'فایل(های) تصویری', // TODO: new
+        'video_uploader' => 'فایل(های) ویدیویی', // TODO: new
+        'audio_uploader' => 'فایل(های) صوتی', // TODO: new
+        'text_uploader'  => 'فایل(های) متنی', // TODO: new
+        'text_content'   => 'محتوای فایل متنی', // TODO: new
     ],
 
     "http" => [

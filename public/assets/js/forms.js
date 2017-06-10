@@ -145,6 +145,7 @@ function forms_validate(formData, jqForm, options) {
 
 
     $('#' + $formId + ' :input').each(function () {
+        forms_markError(this, "reset");
         var $val = $(this).val();
         var $name = $(this).attr('name');
         var $err = $(this).attr('error-value');

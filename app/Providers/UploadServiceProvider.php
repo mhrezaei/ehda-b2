@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 
 class UploadServiceProvider extends ServiceProvider
 {
@@ -46,8 +47,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Checks if uploading of a file type is activated or not
-     * @param $fileType
+     *
+     * @param        $fileType
      * @param string $userType
+     *
      * @return mixed
      */
     public static function isActive($fileType, $userType = 'client')
@@ -57,8 +60,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Get a Config Value For a File Type from Upload Configs
+     *
      * @param string $fileType
      * @param string $configName
+     *
      * @return mixed
      */
     public static function getTypeRule($fileType, $configName)
@@ -68,8 +73,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Get a Config Value For a Section from Upload Configs
+     *
      * @param string $section
      * @param string $configName
+     *
      * @return mixed
      */
     public static function getSectionRule($section, $configName)
@@ -79,8 +86,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Return a View Containing DropZone Uploader Element and Related JavaScript Codes
+     *
      * @param string $fileTypeString
-     * @param array $data
+     * @param array  $data
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public static function dropzoneUploader($fileTypeString, $data = [])
@@ -102,7 +111,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Set User Type to Read Upload Settings From Configs
+     *
      * @param string $userType
+     *
      * @return void
      */
     public static function setUserType($userType)
@@ -112,7 +123,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Set Section to Read Upload Settings From Configs
+     *
      * @param string $section
+     *
      * @return void
      */
     public static function setSection($section)
@@ -122,8 +135,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Set Some Configs to Be Set to All Uploader Elements
-     * @param array|string $first If this is string it will be assumed as config key
-     * @param null|mixed $second If $first is string this will be assumed as config value
+     *
+     * @param array|string $first  If this is string it will be assumed as config key
+     * @param null|mixed   $second If $first is string this will be assumed as config value
      */
     public static function setDefaultJsConfigs($first, $second = null)
     {
@@ -136,7 +150,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Get Current Default JS Configs
+     *
      * @param string $key Key Of Requested Config (If empty all JS Configs will be returned)
+     *
      * @return array|mixed
      */
     public static function getDefaultJsConfigs($key = '')
@@ -148,7 +164,13 @@ class UploadServiceProvider extends ServiceProvider
         return self::$defaultJsConfigs;
     }
 
-
+    /**
+     * Validates an UploadedFile with other info in $request argument
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
     public static function validateFile($request)
     {
         $file = $request->file;
@@ -175,13 +197,15 @@ class UploadServiceProvider extends ServiceProvider
     }
 
     /**
+     * Checks if files number for an uploader reached the limit
+     *
      * @param string $sessionName
      * @param string $typeString
      */
     public static function validateFileNumbers($sessionName, $typeString)
     {
         if (!session()->has($sessionName) or
-            count(array_filter(session()->get($sessionName), function ($item){
+            count(array_filter(session()->get($sessionName), function ($item) {
                 return $item['done'];
             })) < self::getTypeRule($typeString, 'maxFiles')
         ) {
@@ -192,8 +216,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Upload File to Specified Directory
+     *
      * @param UploadedFile $file
-     * @param string $uploadDir Directory for Destination File
+     * @param string       $uploadDir Directory for Destination File
+     *
      * @return File;
      */
     public static function uploadFile($file, $uploadDir)
@@ -204,8 +230,10 @@ class UploadServiceProvider extends ServiceProvider
     }
 
     /**
-     * Remove
+     * Remove File Physically
+     *
      * @param File $file
+     *
      * @return bool
      */
     public static function removeFile($file)
@@ -215,7 +243,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Convert $fileTypeString to a meaning full array
+     *
      * @param string $fileTypeString
+     *
      * @return array
      */
     private static function translateFileTypeString($fileTypeString)
@@ -235,7 +265,9 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Convert $sectionString to a meaning full array
+     *
      * @param string $sectionString
+     *
      * @return array
      */
     private static function translateSectionString($sectionString)
@@ -255,8 +287,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Generate Config Path String
+     *
      * @param string $configPath
-     * @param bool $section <ul><li>TRUE: Path is For a Section</li><li>FALSE: Path is For a File Type</li></ul>
+     * @param bool   $section <ul><li>TRUE: Path is For a Section</li><li>FALSE: Path is For a File Type</li></ul>
+     *
      * @return string This function will return a dot separated string to use in accessing a config
      */
     private static function generateConfigPath($configPath, $section = false)
@@ -274,8 +308,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Follow up a config and search specified or default available value
+     *
      * @param string $configPath Config Path (Dot Separated)
-     * @param int $checked Number of Checked Levels
+     * @param int    $checked    Number of Checked Levels
+     *
      * @return mixed Found Config
      * @throws null if config not found
      */
@@ -288,8 +324,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Searches for closest existed path
+     *
      * @param string $configPath
-     * @param int $step Searching Step (Starts from 0)
+     * @param int    $step Searching Step (Starts from 0)
+     *
      * @return string
      */
     private static function findExistedPath($configPath, $step = 0)
@@ -321,8 +359,10 @@ class UploadServiceProvider extends ServiceProvider
 
     /**
      * Returns keys that should be replaced by default value in every step
+     *
      * @param int $stepNumber
      * @param int $replacementRange Number of Fields That Can Be Replaced by the Default Value
+     *
      * @return array
      */
     private static function getReplacementKeys($stepNumber, $replacementRange)

@@ -10,16 +10,10 @@
                 {{ null, $selectOptions[] = ['id' => $post->id, 'title' => trans("front.file_types.$post->fileType.title")] }}
                 @if($post->fields)
                     {{ null, $fields[$post->id] = explodeNotEmpty(',' , $post->fields) }}
+                    {{ null, $postRules = \App\Providers\CommentServiceProvider::translateRules($post->rules) }}
                     @foreach($fields[$post->id] as $fieldIndex => $fieldValue)
                         @unset($fields[$post->id][$fieldIndex])
                         {{ null, $fieldValue = trim($fieldValue) }}
-
-                        @if(str_contains($fieldValue, '*'))
-                            {{ null, $fieldValue = str_replace('*', '', $fieldValue) }}
-                            {{ null, $tmpField['required'] = true }}
-                        @else
-                            {{ null, $tmpField['required'] = false }}
-                        @endif
 
                         @if(str_contains($fieldValue, '-label'))
                             {{ null, $fieldValue = str_replace('-label', '', $fieldValue) }}
@@ -35,6 +29,13 @@
                         @else
                             {{ null, $tmpField['size'] = '' }}
                         @endif
+
+                        @if(array_key_exists($fieldValue, $postRules) and (in_array('required', $postRules[$fieldValue])))
+                            {{ null, $tmpField['required'] = true }}
+                        @else
+                            {{ null, $tmpField['required'] = false }}
+                        @endif
+
                         {{ null, $fields[$post->id][$fieldValue] = $tmpField }}
                     @endforeach
                 @endif
@@ -69,41 +70,48 @@
                  */
                 $.fn.kickOut = function () {
                     $(this).hide();
-                    if ($(this).is(':input')) {
+                    $(this).findFromThis(':input').each(function () {
                         $(this).attr('disabled', 'disabled');
-                    } else {
-                        $(this).find(':input').each(function () {
-                            $(this).attr('disabled', 'disabled');
-                        });
-                    }
+                    });
                 };
 
                 /**
                  * turn the element over to the page
                  */
                 $.fn.turnOver = function (required) {
-                    if ($(this).is(':input')) {
+                    $(this).findFromThis(':input').each(function () {
                         if (isDefined(required) && required) {
-                            $(this).addClass('form-required');
+                            $(this).changeRequirement(true);
+                        } else {
+                            $(this).changeRequirement(false);
                         }
                         $(this).removeAttr('disabled');
-                    } else {
-                        $(this).find(':input').each(function () {
-                            if (isDefined(required) && required) {
-                                $(this).addClass('form-required');
-                            }
-                            $(this).removeAttr('disabled');
-                        });
-                    }
+                    });
 
                     $(this).show();
+                };
+
+                /**
+                 * Changes requirement of an alement
+                 * @param {bool} requirement
+                 */
+                $.fn.changeRequirement = function (requirement) {
+                    var requiredSign = $(this).closest('.form-group').find('.required-sign');
+                    if (requirement && $(this).is('[type!=hidden]')) {
+                        $(this).addClass('form-required');
+                        requiredSign.show();
+                    } else {
+                        $(this).removeClass('form-required');
+                        requiredSign.hide();
+                    }
                 };
 
                 function customResetForm() {
                     $.each(Dropzone.instances, function (index, obj) {
                         obj.removeAllFiles();
                     });
-                    $('input[type=hidden].optional-input').val('');
+                    $('form#commentForm').find('input[type=hidden].optional-input, :input:visible')
+                        .val('');
                 }
 
                 $(document).ready(function () {
@@ -157,7 +165,7 @@
         @section('hiddenFields')
             @include('front.forms.hidden',[
                 'id' => "file-$fileType",
-                'name' => "file_$fileType",
+                'name' => "{$fileType}_uploader",
                 'extra' => "data-field=$dataField",
                 'class' => 'optional-input',
             ])
@@ -181,7 +189,19 @@
 
         @yield('hiddenFields')
         <div class="row">
+            @unset($id)
 
+            <div class="col-xs-12 optional-input" data-field="text_content">
+                <div class="row">
+                    @include('front.forms.textarea', [
+                        'name' => 'text_content',
+                        'rows' => 4,
+                        'placeholder' => trans('validation.attributes.text_content'),
+                        'label' => trans('validation.attributes.text_content'),
+                        'required' => true,
+                    ])
+                </div>
+            </div>
 
             <div class="col-md-6 col-xs-12 optional-input" data-field="subject">
                 <div class="row">
@@ -189,6 +209,7 @@
                         'name' => 'subject',
                         'placeholder' => trans('validation.attributes.title'),
                         'label' => trans('validation.attributes.submission_work_subject'),
+                        'required' => true,
                     ])
                 </div>
             </div>
@@ -199,6 +220,7 @@
                         'name' => 'name',
                         'placeholder' => trans('validation.attributes.first_and_last_name'),
                         'label' => trans('validation.attributes.submission_work_owner_name'),
+                        'required' => true,
                     ])
                 </div>
             </div>
@@ -209,6 +231,7 @@
                         'name' => 'mobile',
                         'placeholder' => trans('validation.attributes.mobile'),
                         'label' => trans('validation.attributes.submission_work_owner_mobile'),
+                        'required' => true,
                     ])
                 </div>
             </div>
@@ -219,6 +242,7 @@
                         'name' => 'email',
                         'placeholder' => trans('validation.attributes.email'),
                         'label' => trans('validation.attributes.submission_work_owner_email'),
+                        'required' => true,
                     ])
                 </div>
             </div>
@@ -230,6 +254,7 @@
                         'rows' => 4,
                         'placeholder' => trans('validation.attributes.description'),
                         'label' => trans('validation.attributes.description'),
+                        'required' => true,
                     ])
                 </div>
             </div>
