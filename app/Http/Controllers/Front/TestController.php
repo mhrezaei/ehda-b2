@@ -7,6 +7,7 @@ use App\Models\Folder;
 use App\Models\Post;
 use App\Models\Receipt;
 use App\Models\Test\Meta;
+use App\Models\UploadedFile;
 use App\Models\User;
 use App\Providers\PostsServiceProvider;
 use App\Providers\UploadServiceProvider;
@@ -42,10 +43,8 @@ class TestController extends Controller
 
     public function index()
     {
-        $array = [687, 29, 42, 60, 1384, 1097, 88, 59, 724];
-        Receipt::whereIn('user_id', $array)->delete();
-        User::cacheRefreshAll();
-        return ":)";
+        $file = UploadedFile::findBySlug(6, 'id');
+        dd($file->related_files, $file->related_files_pathname);
     }
 
     public function states()

@@ -149,6 +149,26 @@ function array_normalize($array, $reference)
 
 }
 
+/**
+ * Normalizes the given $array with the provided $reference, by filling unset ones.
+ * This functions keeps extra entries.
+ *
+ * @param $array
+ * @param $reference
+ *
+ * @return array
+ */
+function array_normalize_keep_originals($array, $reference)
+{
+    foreach ($reference as $key => $value) {
+        if (!array_has($array, $key)) {
+            $array[$key] = $value;
+        }
+    }
+
+    return $array;
+}
+
 function array_maker($string, $first_delimiter = '-', $second_delimiter = '=')
 {
     $array = explode($first_delimiter, str_replace(' ', null, $string));

@@ -226,7 +226,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => '{lang}', 'middleware' => ['Det
 
 // uplaod url to b used in dropzone
 Route::group(['prefix' => 'file'], function () {
-    Route::post('upload', 'DropzoneController@uplaod_file')->name('dropzone.upload');
+    Route::post('upload', 'DropzoneController@upload_file')->name('dropzone.upload');
     Route::post('remove', 'DropzoneController@remove_file')->name('dropzone.remove');
 });
 
@@ -235,6 +235,7 @@ Route::group(['namespace' => 'Front', 'middleware' => ['DetectLanguage', 'Settin
 
     // tests
     Route::group(['prefix' => 'test'], function () {
+        Route::get('/', 'TestController@index');
         Route::get('states', 'TestController@states');
         Route::get('gallery/archive', 'TestController@gallery_archive');
         Route::get('gallery/single', 'TestController@gallery_single');

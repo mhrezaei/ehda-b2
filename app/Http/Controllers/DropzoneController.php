@@ -9,10 +9,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Models\UploadedFile as UploadedFileModel;
 
 class DropzoneController extends Controller
 {
-    public function uplaod_file(Request $request)
+    public function upload_file(Request $request)
     {
         $file = $request->file;
         $typeString = $request->uploadIdentifier;
@@ -54,23 +55,28 @@ class DropzoneController extends Controller
                 $folderName,
             ]);
             $uploadResult = UploadServiceProvider::uploadFile($file, $uploadDir);
+            $dbRow = UploadedFileModel::findBySlug($uploadResult, 'id');
 
-            if ($uploadResult instanceof File) {
+            if ($dbRow->exists()) {
                 /**
                  * This condition is for synchronous uploading.
                  * If files number has reached the limit while uploading this file, this should be deleted.
                  */
                 if (UploadServiceProvider::validateFileNumbers($sectionName, $typeString)) {
+
                     $currentUploaded[$itemIndex]['done'] = true;
+                    $currentUploaded[$dbRow->hash_id] = $currentUploaded[$itemIndex];
+                    unset($currentUploaded[$itemIndex]);
+
                     session()->put($sessionName, $currentUploaded);
                     session()->save();
+
                     return response()->json([
-                        'success'   => true,
-                        'filePath'  => $uploadResult->getPathname(),
-                        'itemIndex' => $itemIndex,
+                        'success' => true,
+                        'file'    => $dbRow->hash_id,
                     ]);
                 } else {
-                    UploadServiceProvider::removeFile($uploadResult);
+                    UploadServiceProvider::removeFile($dbRow);
                 }
             }
         }
@@ -82,20 +88,19 @@ class DropzoneController extends Controller
     {
         $typeString = $request->uploadIdentifier;
         $sessionName = $request->groupName;
-        $itemIndex = $request->itemIndex;
+        $file = $request->file;
 
-        if ($request->filePath) {
+        if ($file) {
 
             if (session()->has($sessionName)) {
                 $currentUploaded = session()->get($sessionName);
-                if (array_key_exists($itemIndex, $currentUploaded)) {
-                    unset($currentUploaded[$itemIndex]);
+                if (array_key_exists($file, $currentUploaded)) {
+                    unset($currentUploaded[$file]);
                     session()->put($sessionName, $currentUploaded);
                 }
             }
 
-
-            UploadServiceProvider::removeFile($request->filePath);
+            UploadServiceProvider::removeFile($file);
         }
     }
 }

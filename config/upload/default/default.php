@@ -23,6 +23,10 @@ return [
             'maxFileSize'        => 5,
             'maxFiles'           => 5,
             'icon'               => 'picture-o',
+            'thumbnail' => [
+                'width' => 300,
+                'height' => 300,
+            ],
         ],
 
         'video' => [

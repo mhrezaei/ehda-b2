@@ -51,7 +51,7 @@
                 var targetEl = $('#' + target);
                 $.each(accepted, function (index, file) {
                     var rsJson = $.parseJSON(file.xhr.response);
-                    dataArr.push({originalName: file.name, realName: rsJson.filePath});
+                    dataArr.push(rsJson.file);
                 });
                 if (dataArr.length) {
                     targetEl.val(JSON.stringify(dataArr));
