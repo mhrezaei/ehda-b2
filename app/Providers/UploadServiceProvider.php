@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\DropzoneController;
+use function GuzzleHttp\Promise\is_settled;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\File\File;
 use \Illuminate\Support\Facades\File as FilesFacades;
 use Symfony\Component\HttpFoundation\Request;
+use App\Models\UploadedFile as UploadedFileModel;
 
 class UploadServiceProvider extends ServiceProvider
 {
@@ -24,8 +28,12 @@ class UploadServiceProvider extends ServiceProvider
     private static $defaultJsConfigs = [];
     private static $defaultAcceptableLevelsNumber = 2; // number of level that can be changed to default value
     private static $rootUploadDir = 'uploads'; // Root Directory
-    private static $randomNameLength = 16; // Length of Random Name to Be Generated for Uploading Files
+    private static $randomNameLength = 30; // Length of Random Name to Be Generated for Uploading Files
+    private static $fileNameSeparator = '_';
     private static $temporaryFolderName = 'temp';
+    private static $versionsPostfixes = [
+        'original' => 'original',
+    ]; // Postfixes that should be added at the end of names of any version of any file
 
     /**
      * Bootstrap the application services.
@@ -226,34 +234,56 @@ class UploadServiceProvider extends ServiceProvider
      */
     public static function uploadFile($file, $uploadDir)
     {
-        $newName = str_random(self::$randomNameLength) . '.' . $file->getClientOriginalExtension();
+        $newName = self::generateFileName() . '.' . $file->getClientOriginalExtension();
         $finalUploadDir = implode(DIRECTORY_SEPARATOR, [
             self::$rootUploadDir,
             self::$temporaryFolderName,
             $uploadDir
         ]);
-        return $file->move($finalUploadDir, $newName);
+
+        // Save uploaded file to db
+        $id = UploadedFileModel::saveFile($file, [
+            'physical_name' => $newName,
+            'directory'     => $finalUploadDir,
+        ]);
+
+        // Move uploaded file to target directory
+        $file->move($finalUploadDir, $newName);
+
+        return $id;
     }
 
     /**
      * Remove File Physically
      *
-     * @param string|File $file
+     * @param string|UploadedFileModel $file
      *
      * @return bool
      */
     public static function removeFile($file)
     {
-        if(!$file instanceof File) {
-            if (FilesFacades::exists($file)) {
-                $file = new File($file);
-            } else {
-                return false;
-            }
+        if (!$file instanceof UploadedFileModel) {
+            $file = UploadedFileModel::findByHashid($file);
         }
 
-        if (FilesFacades::exists($file->getPathname())) {
-            return FilesFacades::delete($file->getPathname());
+        if ($file->exists() and
+            FilesFacades::exists($file->pathname) and
+            $file->hasStatus('temp')
+        ) {
+            $pathname = $file->pathname;
+
+            $relatedFiles = $file->related_files_pathname;
+            if ($relatedFiles and is_array($relatedFiles)) {
+                foreach ($relatedFiles as $relatedFilePath) {
+                    if (FilesFacades::exists($relatedFilePath)) {
+                        FilesFacades::delete($relatedFilePath);
+                    }
+                }
+            }
+
+            $file->delete();
+
+            return FilesFacades::delete($pathname);
         }
     }
 
@@ -266,23 +296,81 @@ class UploadServiceProvider extends ServiceProvider
     {
         foreach ($request->all() as $index => $value) {
             if (ends_with($index, '_uploader')) {
-                $filesInfo = json_decode($value, true);
-                if ($filesInfo and is_array($filesInfo)) {
-                    foreach ($filesInfo as $key => $fileInfo) {
-                        if (FilesFacades::exists($fileInfo['realName'])) {
-                            $newPath = str_replace(self::$temporaryFolderName . DIRECTORY_SEPARATOR, '', $fileInfo['realName']);
-                            $pathParts = explode(DIRECTORY_SEPARATOR, $newPath);
-                            $newDir = implode(DIRECTORY_SEPARATOR, array_slice($pathParts, 0, count($pathParts) - 1));
+                $filesHashids = json_decode($value, true);
+                if ($filesHashids and is_array($filesHashids)) {
+                    foreach ($filesHashids as $key => $fileHashid) {
+                        $fileRow = UploadedFileModel::findByHashid($fileHashid);
+                        if ($fileRow->exists() and FilesFacades::exists($fileRow->pathname)) {
+                            $newDir = str_replace(self::$temporaryFolderName . DIRECTORY_SEPARATOR, '', $fileRow->directory);
 
-                            $file = new File($fileInfo['realName']);
+                            $fileRow->setStatus('used');
+
+                            $file = new File($fileRow->pathname);
+                            $fileRow->directory = $newDir;
+                            $fileRow = $fileRow->toArray();
+
+                            $fileRow['related_files'] = self::generateRelatedFiles($file, $file->getFilename(), $newDir);
+
                             $file->move($newDir);
-                            $fileInfo['realName'] = $newPath;
-                            $filesInfo[$key] = $fileInfo;
+//                            $fileRow->spreadMeta();
+//                            $relatedFiles = $fileRow->related_files;
+//                            if ($relatedFiles and is_array($relatedFiles)) {
+//                                foreach ($relatedFiles as $key => $relatedFilePath) {
+//                                    if (FilesFacades::exists($relatedFilePath)) {
+//                                        $relatedFile = new File($relatedFilePath);
+//                                        $relatedFile->move($newDir);
+//                                        $relatedFiles[$key] = $newDir . DIRECTORY_SEPARATOR . $relatedFile->getFilename();
+//                                    } else {
+//                                        unset($relatedFiles[$key]);
+//                                    }
+//                                }
+//                            }
+
+
+                            UploadedFileModel::store($fileRow);
+                        } else {
+                            unset($filesHashids[$key]);
                         }
                     }
                 }
-                $request->merge([$index => json_encode($filesInfo)]);
+                $request->merge([$index => json_encode($filesHashids)]);
             }
+        }
+    }
+
+    /**
+     * Generates a random name
+     *
+     * @param string $version  The Postfix tha Will Be Added at the End of the File Name
+     * @param string $baseName Basic Part of the File Name (If empty basic part will be generated randomly)
+     *
+     * @return string
+     */
+    public static function generateFileName($version = 'original', $baseName = '')
+    {
+        if (array_key_exists($version, self::$versionsPostfixes)) {
+            $version = self::$versionsPostfixes[$version];
+        }
+
+        if ($baseName and is_string($baseName)) {
+            $basementPart = [$baseName];
+        } else {
+            $basementPart = [time(), str_random(self::$randomNameLength)];
+        }
+
+        return implode(self::$fileNameSeparator, array_merge($basementPart, [$version]));
+    }
+
+    public static function changeFileNameVersion($fileName, $newVersion)
+    {
+        // remove extension
+        $ext = FilesFacades::extension($fileName);
+        $fileName = substr($fileName, 0, -(strlen($ext) + 1));
+
+        $fileNameParts = explode(self::$fileNameSeparator, $fileName);
+        if (count($fileNameParts) == 3) {
+            $fileNameParts[2] = $newVersion;
+            return implode(self::$fileNameSeparator, $fileNameParts) . '.' . $ext;
         }
     }
 
@@ -362,8 +450,9 @@ class UploadServiceProvider extends ServiceProvider
      */
     private static function followUpConfig($configPath, $checked = 0)
     {
-        if (self::findExistedPath($configPath)) {
-            return Config::get(self::findExistedPath($configPath));
+        $existedPath = self::findExistedPath($configPath);
+        if ($existedPath) {
+            return Config::get($existedPath);
         }
     }
 
@@ -391,7 +480,7 @@ class UploadServiceProvider extends ServiceProvider
                 }
             }
 
-            if ($changed) {
+            if (!$step or $changed) {
                 $newConfigPath = implode('.', $levels);
                 if (Config::has($newConfigPath)) {
                     return $newConfigPath;
@@ -422,4 +511,69 @@ class UploadServiceProvider extends ServiceProvider
         return $replacementKeys;
     }
 
+    /**
+     * @param \Intervention\Image\Image $image
+     * @param integer                   $width
+     * @param integer                   $height
+     *
+     * @return \Intervention\Image\Image
+     */
+    private static function safeResizeImage($image, $width, $height)
+    {
+        if ($width == $height) {
+            if ($image->getWidth() >= $image->getHeight()) {
+                $widthBased = false;
+            } else {
+                $widthBased = true;
+            }
+        } else if ($width = $height) {
+            $widthBased = false;
+        } else {
+            $widthBased = true;
+        }
+
+        if ($widthBased) {
+            $cropWidth = $image->getWidth();
+            $cropHeight = floor(($cropWidth * $height) / $width);
+        } else {
+            $cropHeight = $image->getHeight();
+            $cropWidth = floor(($cropHeight * $width) / $height);
+        }
+
+        $image->crop($cropWidth, $cropHeight);
+        $image->resize($width, $height);
+
+        return $image;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param string       $fileName
+     * @param string       $filePath
+     *
+     * @return array
+     */
+    private static function generateRelatedFiles($file, $fileName, $directory)
+    {
+        $mimeType = $file->getMimeType();
+        $fileType = substr($mimeType, 0, strpos($mimeType, '/'));
+
+        switch ($fileType) {
+            case "image" : {
+                // creating thumbnail
+                $thumbWidth = self::getTypeRule('image', 'thumbnail.height');
+                $thumbHeight = self::getTypeRule('image', 'thumbnail.height');
+                $thumbName = self::changeFileNameVersion($fileName, 'thumb');
+                $thumbPath = $directory . DIRECTORY_SEPARATOR . $thumbName;
+
+                $thumbnail = Image::make($file->getPathname());
+                $thumbnail = self::safeResizeImage($thumbnail, $thumbWidth, $thumbHeight);
+                $thumbnail->save($thumbPath);
+
+                return [
+                    'thumbnail' => $thumbName,
+                ];
+            }
+        }
+    }
 }
